@@ -1,15 +1,11 @@
 ﻿$RegistryLocation = "HKLM:\SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate";
 $ListLocation = $RegistryLocation + "\List"
 $programdata = "$env:Programdata\Intune-WingetConfigurator";
-$parsedListLocation = "$env:Programdata\Intune-WingetConfigurator\List.txt";
+$parsedListLocation = "$env:Programdata\Intune-WingetConfigurator\";
 
-if ( Test-Path -Path $RegistryLocation ) {
-    $configuration = Get-ItemProperty -Path $RegistryLocation;
-}
 
-if ( Test-Path -Path $ListLocation ) {
-    $list = Get-ItemProperty -Path $ListLocation -
-}
+$InstallDir = "C:\Users\hauke\GitHub\Winget-AutoUpdate-Intune"
+
 
 function Write-ListConfigToFile {
     param(
@@ -27,24 +23,54 @@ function Write-ListConfigToFile {
     Out-File -FilePath $parsedListLocation -InputObject $parsedList
 }
 
-Write-ListConfigToFile -FilePath $ListLocation -List $list;
+
 
 function Get-CommandLine {
     param(
         $configuration
     )
 
-    $commandLineArgument = "-ListPath $parsedListLocation"
+    $commandLineArguments = "-silent -ListPath `"$parsedListLocation`""
 
     if ( $configuration.NotificationLevel ) {
-        $commandLineArgument += "-NotificationLevel " + $configuration.NotificationLevel;
+        $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
     }
 
     if ( $configuration.RunOnMetered ) {
-        $commandLineArgument += "-RunOnMetered";
+        $commandLineArguments += " -RunOnMetered";
     }
 
     if ( $configuration.UseWhiteList ) {
-        $commandLineArgument += "-UseWhiteList";
+        $commandLineArguments += " -UseWhiteList";
     }
+
+    return $commandLineArguments
 }
+
+
+
+if ( Test-Path -Path $RegistryLocation ) {
+    $configuration = Get-ItemProperty -Path $RegistryLocation;
+
+    
+}
+
+if ( Test-Path -Path $ListLocation ) {
+    $list = Get-ItemProperty -Path $ListLocation
+
+    $listFileName = "excluded_apps.txt"
+    if ( $configuration.UseWhiteList ) {
+        $listFileName = "included_apps.txt";
+    }
+    $ListLocation += $listFileName;
+
+    Write-ListConfigToFile -FilePath $ListLocation -List $list;
+}
+
+# Generate filename for the include/exclude list.
+
+$commandLineArguments = Get-CommandLine -configuration $configuration;
+
+$command  = "& C:\Users\hauke\GitHub\Winget-AutoUpdate-Intune\Winget-AutoUpdate-Install.ps1 $commandLIneArguments"
+
+iex $command;
