@@ -2,7 +2,6 @@
 <policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions" >
 	<policyNamespaces >
 		<target prefix="WinGet-AutoUpdate-Configurator" namespace="WinGet-AutoUpdate-Configurator.Configuration.Policies" />
-		<using prefix="windows" namespace="Microsoft.Policies.Windows"/>
 	</policyNamespaces>
 	<resources minRequiredRevision="1.0" fallbackCulture="en-us" />
 	<supportedOn >
@@ -13,7 +12,7 @@
 	<categories ><category name="Configuration" displayName="$(string.Configuration)" /></categories>
     <policies >
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-List -->
-<policy name="Winget-AutoUpdate-List" class="Machine" displayName="$(string.ListDisplayName)" explainText="$(string.ListexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate\List" valueName="List" >
+<policy name="Winget-AutoUpdate-List" class="Machine" displayName="$(string.ListDisplayName)" explainText="$(string.ListexplainText)" presentation="$(string.ListPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate\List" valueName="List" >
 	<parentCategory ref="Configuration" />
 	<supportedOn ref="SupportedOn" />
 	<elements>
@@ -23,37 +22,37 @@
 
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesInterval -->
-<policy name="Winget-AutoUpdate-UpdatesInterval" class="Machine" displayName="$(string.UpdatesIntervalDisplayName)" explainText="$(string.UpdatesIntervalexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesInterval" >
+<policy name="Winget-AutoUpdate-UpdatesInterval" class="Machine" displayName="$(string.UpdatesIntervalDisplayName)" explainText="$(string.UpdatesIntervalexplainText)" presentation="$(string.UpdatesIntervalPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesInterval" >
 	<parentCategory ref="Configuration" />
 	<supportedOn ref="SupportedOn" />
 <elements>
         <enum id="UpdatesInterval" valueName="UpdatesInterval" required="true">
-            <item displayName="$(string.UpdatesInterval_Daily)">
+            <item displayName="$(string.UpdatesIntervalDaily)">
                 <value>
                     <text value="Daily" />
                 </value>
             </item>
-            <item displayName="$(string.UpdatesInterval_BiDaily)">
+            <item displayName="$(string.UpdatesIntervalBiDaily)">
                 <value>
                     <text value="BiDaily" />
                 </value>
             </item>
-            <item displayName="$(string.UpdatesInterval_Weekly)">
+            <item displayName="$(string.UpdatesIntervalWeekly)">
                 <value>
                     <text value="Weekly" />
                 </value>
             </item>
-            <item displayName="$(string.UpdatesInterval_BiWeekly)">
+            <item displayName="$(string.UpdatesIntervalBiWeekly)">
                 <value>
                     <text value="BiWeekly" />
                 </value>
             </item>
-            <item displayName="$(string.UpdatesInterval_Monthly)">
+            <item displayName="$(string.UpdatesIntervalMonthly)">
                 <value>
                     <text value="Monthly" />
                 </value>
             </item>
-            <item displayName="$(string.UpdatesInterval_Never)">
+            <item displayName="$(string.UpdatesIntervalNever)">
                 <value>
                     <text value="Never" />
                 </value>
@@ -87,22 +86,22 @@
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-NotificationLevel -->
-<policy name="Winget-AutoUpdate-NotificationLevel" class="Machine" displayName="$(string.NotificationLeveldisplayName)" explainText="$(string.NotificationLevelexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="NotificationLevel" >
+<policy name="Winget-AutoUpdate-NotificationLevel" class="Machine" displayName="$(string.NotificationLeveldisplayName)" explainText="$(string.NotificationLevelexplainText)" presentation="$(string.NotificationLevelPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="NotificationLevel" >
 	<parentCategory ref="Configuration" />
 	<supportedOn ref="SupportedOn" />
 	<elements>
         <enum id="NotificationLevel" valueName="NotificationLevel" required="true">
-            <item displayName="$(string.NotificationLevel_Full)">
+            <item displayName="$(string.NotificationLevelFull)">
                 <value>
                     <text value="Full" />
                 </value>
             </item>
-            <item displayName="$(string.NotificationLevel_SuccessOnly)">
+            <item displayName="$(string.NotificationLevelSuccessOnly)">
                 <value>
                     <text value="SuccessOnly" />
                 </value>
             </item>
-            <item displayName="$(string.NotificationLevel_None)">
+            <item displayName="$(string.NotificationLevelNone)">
                 <value>
                     <text value="None" />
                 </value>
@@ -124,7 +123,7 @@
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesAtTime -->
-<policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesAtTime" >
+<policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(string.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesAtTime" >
 	<parentCategory ref="Configuration" />
 	<supportedOn ref="SupportedOn" />
 	<elements><text id="UpdatesAtTime" valueName="UpdatesAtTime" required="true"/></elements>

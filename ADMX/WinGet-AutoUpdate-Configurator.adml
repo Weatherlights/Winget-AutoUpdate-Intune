@@ -26,16 +26,27 @@
 
       <string id="UpdatesAtTimedisplayName">Update at time</string>
       <string id="UpdatesAtTimeexplainText">Specify the time of the update interval execution time. Default 6AM</string>
+
+      <string id="NotificationLevelFull">Everything</string>
+      <string id="NotificationLevelSuccessOnly">Only success</string>
+      <string id="NotificationLevelNone">None</string>
+
+      <string id="UpdatesIntervalDaily">Daily</string>
+      <string id="UpdatesIntervalBiDaily">Every two days</string>
+      <string id="UpdatesIntervalWeekly">Weekly</string>
+      <string id="UpdatesIntervalBiWeekly">Every two weeks</string>
+      <string id="UpdatesIntervalMonthly">Monthly</string>
+      <string id="UpdatesIntervalNever">Never</string>
     </stringTable>
     <presentationTable>
-      <presentation id="Winget-AutoUpdate-UpdatesAtTime">
+      <presentation id="UpdatesAtTimePresentation">
             <textBox refId="UpdatesAtTime"><label>Time</label><defaultValue>6am</defaultValue></textBox>
       </presentation>
-      <presentation id="Winget-AutoUpdate-List">
+      <presentation id="ListPresentation">
         <listBox refId="List" required="false">List</listBox>
       </presentation>
-      <presentation id="Winget-AutoUpdate-NotificationLevel"><dropdownList refId="NotificationLevel">Notification level</dropdownList></presentation>
-      <presentation id="Winget-AutoUpdate-UpdatesInterval"><dropdownList refId="UpdatesInterval">Interval</dropdownList></presentation>
+      <presentation id="NotificationLevelPresentation"><dropdownList refId="NotificationLevel">Notification level</dropdownList></presentation>
+      <presentation id="UpdatesIntervalPresentation"><dropdownList refId="UpdatesInterval">Interval</dropdownList></presentation>
     </presentationTable>
   </resources>
 </policyDefinitionResources>
