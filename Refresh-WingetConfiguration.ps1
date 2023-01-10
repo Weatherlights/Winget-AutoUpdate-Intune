@@ -39,7 +39,7 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "-silent -NoClean -DoNotUpdate -ListPath `"$DataDir`""
+    $commandLineArguments = "-silent -NoClean -ListPath `"$DataDir`""
 
     if ( $configuration.NotificationLevel ) {
         $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
