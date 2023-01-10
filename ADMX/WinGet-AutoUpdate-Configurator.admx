@@ -1,60 +1,59 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions" >
-	<policyNamespaces >
-		<target prefix="WinGet-AutoUpdate-Configurator" namespace="WinGet-AutoUpdate-Configurator.Configuration.Policies" />
+﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
+	<policyNamespaces>
+		<target prefix="WinGet-AutoUpdate-Configurator" namespace="WinGet-AutoUpdate-Configurator.Configuration.Policies"/>
 	</policyNamespaces>
-	<resources minRequiredRevision="1.0" fallbackCulture="en-us" />
-	<supportedOn >
-		<definitions >
-			<definition name="SupportedOn" displayName="$(string.SupportedOn)" />
+	<resources minRequiredRevision="1.0" fallbackCulture="en-us"/>
+	<supportedOn>
+		<definitions>
+			<definition name="SupportedOn" displayName="$(string.SupportedOn)"/>
 		</definitions>
 	</supportedOn>
-	<categories ><category name="Configuration" displayName="$(string.Configuration)" /></categories>
-    <policies >
+	<categories><category name="Configuration" displayName="$(string.Configuration)"/></categories>
+    <policies>
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-List -->
-<policy name="Winget-AutoUpdate-List" class="Machine" displayName="$(string.ListDisplayName)" explainText="$(string.ListexplainText)" presentation="$(string.ListPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate\List" valueName="List" >
-	<parentCategory ref="Configuration" />
-	<supportedOn ref="SupportedOn" />
+<policy name="Winget-AutoUpdate-List" class="Machine" displayName="$(string.ListDisplayName)" explainText="$(string.ListexplainText)" presentation="$(string.ListPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="List">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
 	<elements>
-        <list id="List" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate\List" valuePrefix="" />
+        <list id="List" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate\List" valuePrefix=""/>
 	</elements>
 </policy>
 
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesInterval -->
-<policy name="Winget-AutoUpdate-UpdatesInterval" class="Machine" displayName="$(string.UpdatesIntervalDisplayName)" explainText="$(string.UpdatesIntervalexplainText)" presentation="$(string.UpdatesIntervalPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesInterval" >
-	<parentCategory ref="Configuration" />
-	<supportedOn ref="SupportedOn" />
+<policy name="Winget-AutoUpdate-UpdatesInterval" class="Machine" displayName="$(string.UpdatesIntervalDisplayName)" explainText="$(string.UpdatesIntervalexplainText)" presentation="$(string.UpdatesIntervalPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesInterval">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
 <elements>
         <enum id="UpdatesInterval" valueName="UpdatesInterval" required="true">
             <item displayName="$(string.UpdatesIntervalDaily)">
                 <value>
-                    <text value="Daily" />
+                    <text value="Daily"/>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalBiDaily)">
                 <value>
-                    <text value="BiDaily" />
+                    <text value="BiDaily"/>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalWeekly)">
                 <value>
-                    <text value="Weekly" />
+                    <text value="Weekly"/>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalBiWeekly)">
                 <value>
-                    <text value="BiWeekly" />
+                    <text value="BiWeekly"/>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalMonthly)">
                 <value>
-                    <text value="Monthly" />
+                    <text value="Monthly"/>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalNever)">
                 <value>
-                    <text value="Never" />
+                    <text value="Never"/>
                 </value>
             </item>
         </enum>
@@ -62,48 +61,48 @@
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-RunOnMetered -->
-<policy name="Winget-AutoUpdate-RunOnMetered" class="Machine" displayName="$(string.RunOnMetereddisplayName)" explainText="$(string.RunOnMeteredexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="RunOnMetered" >
-	<parentCategory ref="Configuration" />
-	<supportedOn ref="SupportedOn" />
+<policy name="Winget-AutoUpdate-RunOnMetered" class="Machine" displayName="$(string.RunOnMetereddisplayName)" explainText="$(string.RunOnMeteredexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="RunOnMetered">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
       <enabledValue>
-        <decimal value="1" />
+        <decimal value="1"/>
       </enabledValue>
       <disabledValue>
-        <decimal value="0" />
+        <decimal value="0"/>
       </disabledValue>
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UseWhiteList -->
-<policy name="Winget-AutoUpdate-UseWhiteList" class="Machine" displayName="$(string.UseWhiteListdisplayName)" explainText="$(string.UseWhiteListexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UseWhiteList" >
-	<parentCategory ref="Configuration" />
-	<supportedOn ref="SupportedOn" />
+<policy name="Winget-AutoUpdate-UseWhiteList" class="Machine" displayName="$(string.UseWhiteListdisplayName)" explainText="$(string.UseWhiteListexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UseWhiteList">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
       <enabledValue>
-        <decimal value="1" />
+        <decimal value="1"/>
       </enabledValue>
       <disabledValue>
-        <decimal value="0" />
+        <decimal value="0"/>
       </disabledValue>
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-NotificationLevel -->
-<policy name="Winget-AutoUpdate-NotificationLevel" class="Machine" displayName="$(string.NotificationLeveldisplayName)" explainText="$(string.NotificationLevelexplainText)" presentation="$(string.NotificationLevelPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="NotificationLevel" >
-	<parentCategory ref="Configuration" />
-	<supportedOn ref="SupportedOn" />
+<policy name="Winget-AutoUpdate-NotificationLevel" class="Machine" displayName="$(string.NotificationLeveldisplayName)" explainText="$(string.NotificationLevelexplainText)" presentation="$(string.NotificationLevelPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="NotificationLevel">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
 	<elements>
         <enum id="NotificationLevel" valueName="NotificationLevel" required="true">
             <item displayName="$(string.NotificationLevelFull)">
                 <value>
-                    <text value="Full" />
+                    <text value="Full"/>
                 </value>
             </item>
             <item displayName="$(string.NotificationLevelSuccessOnly)">
                 <value>
-                    <text value="SuccessOnly" />
+                    <text value="SuccessOnly"/>
                 </value>
             </item>
             <item displayName="$(string.NotificationLevelNone)">
                 <value>
-                    <text value="None" />
+                    <text value="None"/>
                 </value>
             </item>
         </enum>
@@ -111,21 +110,21 @@
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesAtLogon -->
-<policy name="Winget-AutoUpdate-UpdatesAtLogon" class="Machine" displayName="$(string.UpdatesAtLogondisplayName)" explainText="$(string.UpdatesAtLogonexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesAtLogon" >
-	<parentCategory ref="Configuration" />
-	<supportedOn ref="SupportedOn" />
+<policy name="Winget-AutoUpdate-UpdatesAtLogon" class="Machine" displayName="$(string.UpdatesAtLogondisplayName)" explainText="$(string.UpdatesAtLogonexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesAtLogon">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
       <enabledValue>
-        <decimal value="1" />
+        <decimal value="1"/>
       </enabledValue>
       <disabledValue>
-        <decimal value="0" />
+        <decimal value="0"/>
       </disabledValue>
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesAtTime -->
-<policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(string.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesAtTime" >
-	<parentCategory ref="Configuration" />
-	<supportedOn ref="SupportedOn" />
+<policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(string.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesAtTime">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
 	<elements><text id="UpdatesAtTime" valueName="UpdatesAtTime" required="true"/></elements>
 </policy>
 </policies>
