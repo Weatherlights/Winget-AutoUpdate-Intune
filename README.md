@@ -7,6 +7,12 @@ The WinGet-AutoUpdate-Configurator takes the configuration from Microsoft Intune
 
 ![image](https://user-images.githubusercontent.com/96626929/150645599-9460def4-0818-4fe9-819c-dd7081ff8447.png)
 
+## Intune integration using ADMX backed profiles
+![image](https://github.com/Weatherlights/Winget-AutoUpdate-Intune/blob/22162cc15e7d5fa89e7ed4c58ba19c78b8ff7940/docs/img/teaser1.png)
+Winget-AutoUpdate-Configurator integrates well into Microsoft Intune by using ADMX backed policies. You can configure nearly all aspects of Winget-AutoUpdate from your Microsoft Intune console and change settings when you need without redeploying Winget-AutoUpdate.
+
+You can also configure your white- and blacklist from within the Microsoft Intune console and do not need to host them on an external data source.
+
 ## Features
 * Fully ADMX backed configuration using Microsoft Intune
 * White- or Blacklist apps you want to update
