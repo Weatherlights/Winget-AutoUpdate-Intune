@@ -1,13 +1,18 @@
 ﻿$PolicyRegistryLocation = "HKLM:\SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate";
 $PolicyListLocation = $PolicyRegistryLocation + "\List"
-$programdata = "$env:Programdata\Intune-WingetConfigurator";
-$DataDir = "$env:Programdata\Intune-WingetConfigurator\";
+
+$DataDir = "$env:Programdata\Winget-AutoUpdate-Configurator\";
 
 $scriptlocation = $MyInvocation.MyCommand.Path + "\.."
+
+Import-Module "$scriptLocation\WinGet-AutoUpdate-Configurator\Generic.psm1"
+
 $InstallDir = "C:\Users\hauke\GitHub\Winget-AutoUpdate-Intune"
+
 
 if ( !(Test-Path -Path $DataDir) ) {
     md $DataDir -Force
+    Write-LogFile -InputObject "Created non existing directory $DataDir."
 }
 
 
@@ -54,9 +59,10 @@ function Get-CommandLine {
 
 
 if ( Test-Path -Path $PolicyRegistryLocation ) {
-    $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;
-
-    
+    $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;   
+    Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation"; 
+} else {
+     Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet."
 }
 
 if ( Test-Path -Path $PolicyListLocation ) {
@@ -69,21 +75,31 @@ if ( Test-Path -Path $PolicyListLocation ) {
     $ListLocation = "$DataDir\$listFileName";
 
     Write-ListConfigToFile -FilePath $ListLocation -List $list;
+
+    Write-LogFile -InputObject "Parsed list to $ListLocation."
+} else {
+    Write-LogFile -InputObject "No List provided."
 }
 
 # Generate filename for the include/exclude list.
 
 $commandLineArguments = Get-CommandLine -configuration $configuration;
+Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
 if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
-    $previousCommandLine = Get-Content -Path "$DataDir\LastCommand.txt"
+    $previousCommandLineArguments = Get-Content -Path "$DataDir\LastCommand.txt"
 } else {
-    $previousCommandLine = "";
+    $previousCommandLineArguments = "";
 }
+Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments."
 
-$command  = "& $scriptlocation\Winget-AutoUpdate-Install.ps1 $commandLIneArguments"
+$command  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
 
-if ( $commandLineArguments -ne $previousCommandLine ) {
+if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     iex $command;
+    Write-LogFile "Updated WUA."
+} else {
+    Write-LogFile "Skipped updating WUA."
 }
 
 Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
+Write-LogFile -InputObject "Stored commandline arguments."

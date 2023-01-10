@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<policyDefinitionResources xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+  <displayName></displayName>
+  <description></description>
+  <resources>
+    <stringTable>
+      <string id="Configuration">WinGet-AutoUpdate-Configurator</string>
+      <string id="SupportedOn">Windows 10 and Windows 11</string>
+      <string id="ListDisplayName">List</string>
+      <string id="ListexplainText">Provide the WinGet IDs of applications you want to include or exclude.</string>
+
+      <string id="UpdatesIntervalDisplayName">Update frequency</string>
+      <string id="UpdatesIntervalexplainText">Specify the update frequency: Daily (Default), BiDaily, Weekly, BiWeekly, Monthly or Never</string>
+
+      <string id="RunOnMetereddisplayName">Run on metered connection</string>
+      <string id="RunOnMeteredexplainText">Run WAU on metered connection. Default No.</string>
+
+      <string id="UseWhiteListdisplayName">Use White List instead of Black List</string>
+      <string id="UseWhiteListexplainText">Use White List instead of Black List.</string>
+
+      <string id="NotificationLeveldisplayName">Notification level</string>
+      <string id="NotificationLevelexplainText">Specify the Notification level: Full (Default, displays all notification), SuccessOnly (Only displays notification for success) or None (Does not show any popup).</string>
+
+      <string id="UpdatesAtLogondisplayName">Updates at logon</string>
+      <string id="UpdatesAtLogonexplainText">Set WAU to run at user logon.</string>
+
+      <string id="UpdatesAtTimedisplayName">Update at time</string>
+      <string id="UpdatesAtTimeexplainText">Specify the time of the update interval execution time. Default 6AM</string>
+    </stringTable>
+    <presentationTable>
+      <presentation id="Winget-AutoUpdate-UpdatesAtTime">
+            <textBox refId="UpdatesAtTime"><label>Time</label><defaultValue>6am</defaultValue></textBox>
+      </presentation>
+      <presentation id="Winget-AutoUpdate-List">
+        <listBox refId="List" required="false">List</listBox>
+      </presentation>
+      <presentation id="Winget-AutoUpdate-NotificationLevel"><dropdownList refId="NotificationLevel">Notification level</dropdownList></presentation>
+      <presentation id="Winget-AutoUpdate-UpdatesInterval"><dropdownList refId="UpdatesInterval">Interval</dropdownList></presentation>
+    </presentationTable>
+  </resources>
+</policyDefinitionResources>
