@@ -15,6 +15,7 @@ You can also configure your white- and blacklist from within the Microsoft Intun
 ![image](https://github.com/Weatherlights/Winget-AutoUpdate-Intune/blob/b4e70d7e476eef0e99c841bb807c0604ba2d7676/docs/img/teaser1.png)
 
 ## Features
+* Updates (nearly) every 3rd Party App that using WinGet
 * Fully ADMX backed configuration using Microsoft Intune
 * White- or Blacklist apps you want to update
 * Easy deployment using a single MSI file
