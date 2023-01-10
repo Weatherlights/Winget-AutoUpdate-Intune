@@ -19,3 +19,6 @@ You can also configure your white- and blacklist from within the Microsoft Intun
 * Fully ADMX backed configuration using Microsoft Intune
 * White- or Blacklist apps you want to update
 * Easy deployment using a single MSI file
+
+## Where to start from here
+Take a look into the [Wiki](https://github.com/Weatherlights/Winget-AutoUpdate-Intune/wiki)... I just wrote some stuff together that helps you getting started.
