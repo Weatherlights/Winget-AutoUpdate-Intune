@@ -43,7 +43,7 @@
             <textBox refId="UpdatesAtTime"><label>Time</label><defaultValue>6am</defaultValue></textBox>
       </presentation>
       <presentation id="ListPresentation">
-        <listBox refId="List" required="false">List</listBox>
+        <listBox refId="List">List</listBox>
       </presentation>
       <presentation id="NotificationLevelPresentation"><dropdownList refId="NotificationLevel">Notification level</dropdownList></presentation>
       <presentation id="UpdatesIntervalPresentation"><dropdownList refId="UpdatesInterval">Interval</dropdownList></presentation>

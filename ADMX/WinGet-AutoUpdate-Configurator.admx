@@ -11,7 +11,7 @@
 	<categories><category name="Configuration" displayName="$(string.Configuration)"/></categories>
     <policies>
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-List -->
-<policy name="Winget-AutoUpdate-List" class="Machine" displayName="$(string.ListDisplayName)" explainText="$(string.ListexplainText)" presentation="$(string.ListPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="List">
+<policy name="Winget-AutoUpdate-List" class="Machine" displayName="$(string.ListDisplayName)" explainText="$(string.ListexplainText)" presentation="$(presentation.ListPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
 	<parentCategory ref="Configuration"/>
 	<supportedOn ref="SupportedOn"/>
 	<elements>
@@ -21,39 +21,39 @@
 
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesInterval -->
-<policy name="Winget-AutoUpdate-UpdatesInterval" class="Machine" displayName="$(string.UpdatesIntervalDisplayName)" explainText="$(string.UpdatesIntervalexplainText)" presentation="$(string.UpdatesIntervalPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesInterval">
+<policy name="Winget-AutoUpdate-UpdatesInterval" class="Machine" displayName="$(string.UpdatesIntervalDisplayName)" explainText="$(string.UpdatesIntervalexplainText)" presentation="$(presentation.UpdatesIntervalPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
 	<parentCategory ref="Configuration"/>
 	<supportedOn ref="SupportedOn"/>
 <elements>
-        <enum id="UpdatesInterval" valueName="UpdatesInterval" required="true">
+        <enum id="UpdatesInterval" valueName="UpdatesInterval">
             <item displayName="$(string.UpdatesIntervalDaily)">
                 <value>
-                    <text value="Daily"/>
+                    <string>Daily</string>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalBiDaily)">
                 <value>
-                    <text value="BiDaily"/>
+                    <string>BiDaily</string>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalWeekly)">
                 <value>
-                    <text value="Weekly"/>
+                    <string>Weekly</string>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalBiWeekly)">
                 <value>
-                    <text value="BiWeekly"/>
+                    <string>BiWeekly</string>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalMonthly)">
                 <value>
-                    <text value="Monthly"/>
+                    <string>Monthly</string>
                 </value>
             </item>
             <item displayName="$(string.UpdatesIntervalNever)">
                 <value>
-                    <text value="Never"/>
+                    <string>Never</string>
                 </value>
             </item>
         </enum>
@@ -85,24 +85,24 @@
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-NotificationLevel -->
-<policy name="Winget-AutoUpdate-NotificationLevel" class="Machine" displayName="$(string.NotificationLeveldisplayName)" explainText="$(string.NotificationLevelexplainText)" presentation="$(string.NotificationLevelPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="NotificationLevel">
+<policy name="Winget-AutoUpdate-NotificationLevel" class="Machine" displayName="$(string.NotificationLeveldisplayName)" explainText="$(string.NotificationLevelexplainText)" presentation="$(presentation.NotificationLevelPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
 	<parentCategory ref="Configuration"/>
 	<supportedOn ref="SupportedOn"/>
 	<elements>
-        <enum id="NotificationLevel" valueName="NotificationLevel" required="true">
+        <enum id="NotificationLevel" valueName="NotificationLevel">
             <item displayName="$(string.NotificationLevelFull)">
                 <value>
-                    <text value="Full"/>
+                    <string>Full</string>
                 </value>
             </item>
             <item displayName="$(string.NotificationLevelSuccessOnly)">
                 <value>
-                    <text value="SuccessOnly"/>
+                    <string>SuccessOnly</string>
                 </value>
             </item>
             <item displayName="$(string.NotificationLevelNone)">
                 <value>
-                    <text value="None"/>
+                    <string>None</string>
                 </value>
             </item>
         </enum>
@@ -122,10 +122,10 @@
 </policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesAtTime -->
-<policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(string.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="UpdatesAtTime">
+<policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(presentation.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
 	<parentCategory ref="Configuration"/>
 	<supportedOn ref="SupportedOn"/>
-	<elements><text id="UpdatesAtTime" valueName="UpdatesAtTime" required="true"/></elements>
+	<elements><text id="UpdatesAtTime" valueName="UpdatesAtTime" maxLength="1000000" required="true"/></elements>
 </policy>
 </policies>
 </policyDefinitions>
