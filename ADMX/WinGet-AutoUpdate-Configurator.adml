@@ -6,7 +6,7 @@
     <stringTable>
       <string id="Configuration">WinGet-AutoUpdate-Configurator</string>
       <string id="SupportedOn">Windows 10 and Windows 11</string>
-      <string id="ListDisplayName">List</string>
+      <string id="ListDisplayName">Application List</string>
       <string id="ListexplainText">Provide the WinGet IDs of applications you want to include or exclude.</string>
 
       <string id="UpdatesIntervalDisplayName">Update frequency</string>
