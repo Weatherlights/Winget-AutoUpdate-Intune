@@ -53,6 +53,34 @@ function Get-CommandLine {
         $commandLineArguments += " -UseWhiteList";
     }
 
+    if ( $configuration.UpdatesInterval ) {
+        $commandLineArguments += " -UpdatesInterval " + $configuration.UpdatesInterval;
+    }
+
+    if ( $configuration.UpdatesAtTime ) {
+        $commandLineArguments += " -UpdatesAtTime " + $configuration.UpdatesAtTime;
+    }
+
+    if ( $configuration.UpdatesAtLogon ) {
+        $commandLineArguments += " -UpdatesAtLogon";
+    }
+
+    if ( $configuration.DesktopShortcut ) {
+        $commandLineArguments += " -DesktopShortcut";
+    }
+
+    if ( $configuration.StartMenuShortcut ) {
+        $commandLineArguments += " -StartMenuShortcut";
+    }
+
+    if ( $configuration.DoNotUpdate ) {
+        $commandLineArguments += " -DoNotUpdate";
+    }
+
+    if ( $configuration.DisableWAUAutoUpdate ) {
+        $commandLineArguments += " -DisableWAUAutoUpdate";
+    }
+
     return $commandLineArguments
 }
 

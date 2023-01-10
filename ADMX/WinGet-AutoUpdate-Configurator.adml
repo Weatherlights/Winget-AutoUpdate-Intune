@@ -27,6 +27,19 @@
       <string id="UpdatesAtTimedisplayName">Update at time</string>
       <string id="UpdatesAtTimeexplainText">Specify the time of the update interval execution time. Default 6AM</string>
 
+      <string id="DesktopShortcutdisplayName">Desktop Shortcut</string>
+      <string id="DesktopShortcutexplainText">Create a shortcut for user interaction on the Desktop to run task Winget-AutoUpdate</string>
+
+      <string id="StartMenuShortcutdisplayName">Startmenu Shortcut</string>
+      <string id="StartMenuShortcutexplainText">Create shortcuts for user interaction in the Start Menu to run task Winget-AutoUpdate, open Logs and Web Help</string>
+
+      <string id="DoNotUpdatedisplayName">Do not update on install</string>
+      <string id="DoNotUpdateexplainText">Do not run Winget-AutoUpdate after installation. By default, Winget-AutoUpdate is run just after installation.</string>
+
+      <string id="DisableWAUAutoUpdatedisplayName">Disable automatic updates</string>
+      <string id="DisableWAUAutoUpdateexplainText">Disable Winget-AutoUpdate update checking. By default, WAU auto update if new version is available on Github.</string>
+
+
       <string id="NotificationLevelFull">Everything</string>
       <string id="NotificationLevelSuccessOnly">Only success</string>
       <string id="NotificationLevelNone">None</string>

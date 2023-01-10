@@ -121,6 +121,51 @@
       </disabledValue>
 </policy>
 
+<policy name="Winget-AutoUpdate-DesktopShortcut" class="Machine" displayName="$(string.DesktopShortcutdisplayName)" explainText="$(string.DesktopShortcutexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="DesktopShortcut">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+</policy>
+
+<policy name="Winget-AutoUpdate-StartMenuShortcut" class="Machine" displayName="$(string.StartMenuShortcutdisplayName)" explainText="$(string.StartMenuShortcutexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="StartMenuShortcut">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+</policy>
+
+<policy name="Winget-AutoUpdate-DoNotUpdate" class="Machine" displayName="$(string.DoNotUpdatedisplayName)" explainText="$(string.DoNotUpdateexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="DoNotUpdate">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+</policy>
+
+<policy name="Winget-AutoUpdate-DisableWAUAutoUpdate" class="Machine" displayName="$(string.DisableWAUAutoUpdatedisplayName)" explainText="$(string.DisableWAUAutoUpdateexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="DisableWAUAutoUpdate">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+</policy>
+
+
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesAtTime -->
 <policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(presentation.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
 	<parentCategory ref="Configuration"/>
