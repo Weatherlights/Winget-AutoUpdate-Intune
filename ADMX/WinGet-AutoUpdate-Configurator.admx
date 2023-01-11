@@ -1,4 +1,4 @@
-﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
+﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.02.0001" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
 	<policyNamespaces>
 		<target prefix="WinGet-AutoUpdate-Configurator" namespace="WinGet-AutoUpdate-Configurator.Configuration.Policies"/>
 	</policyNamespaces>
@@ -187,13 +187,28 @@
       </disabledValue>
 </policy>
 
-
+<policy name="Winget-AutoUpdate-BypassListForUsers" class="Machine" displayName="$(string.BypassListForUsersdisplayName)" explainText="$(string.BypassListForUsersexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="BypassListForUsers">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+</policy>
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesAtTime -->
 <policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(presentation.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
 	<parentCategory ref="Configuration"/>
 	<supportedOn ref="SupportedOn"/>
 	<elements><text id="UpdatesAtTime" valueName="UpdatesAtTime" maxLength="1000000" required="true"/></elements>
+</policy>
+
+<policy name="Winget-AutoUpdate-ModsPath" class="Machine" displayName="$(string.ModsPathdisplayName)" explainText="$(string.ModsPathexplainText)" presentation="$(presentation.ModsPathPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+	<elements><text id="ModsPath" valueName="ModsPath" maxLength="1000000" required="true"/></elements>
 </policy>
 </policies>
 </policyDefinitions>

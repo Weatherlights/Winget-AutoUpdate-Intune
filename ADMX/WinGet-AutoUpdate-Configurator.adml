@@ -45,6 +45,13 @@
       <string id="InstallUserContextdisplayName">Install in usercontext</string>
       <string id="InstallUserContextexplainText">Install WAU with system and user context executions. This can be used to update software that is only installed within the user profile.</string>
 
+      <string id="ModsPathdisplayName">Mods Path</string>
+      <string id="ModsPathexplainText">Get mods from Path (URL/UNC/Local)</string>
+
+      <string id="BypassListForUsersdisplayName">Bypass Application List for Users</string>
+      <string id="BypassListForUsersexplainText">Configure WAU to bypass the Black/White list when run in user context</string>
+
+
 
       <string id="NotificationLevelFull">Everything</string>
       <string id="NotificationLevelSuccessOnly">Only success</string>
@@ -60,6 +67,9 @@
     <presentationTable>
       <presentation id="UpdatesAtTimePresentation">
             <textBox refId="UpdatesAtTime"><label>Time</label><defaultValue>6am</defaultValue></textBox>
+      </presentation>
+      <presentation id="ModsPathPresentation">
+            <textBox refId="ModsPath"><label>Path</label><defaultValue></defaultValue></textBox>
       </presentation>
       <presentation id="ListPresentation">
         <listBox refId="List">List</listBox>

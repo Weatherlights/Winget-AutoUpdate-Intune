@@ -47,6 +47,10 @@ function Get-CommandLine {
         $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
     }
 
+    if ( $configuration.ModsPath ) {
+        $commandLineArguments += " -ModsPath " + $configuration.ModsPath;
+    }
+
     if ( $configuration.RunOnMetered ) {
         $commandLineArguments += " -RunOnMetered";
     }
@@ -61,6 +65,10 @@ function Get-CommandLine {
 
     if ( $configuration.UpdatesAtTime ) {
         $commandLineArguments += " -UpdatesAtTime " + $configuration.UpdatesAtTime;
+    }
+
+    if ( $configuration.BypassListForUsers ) {
+        $commandLineArguments += " -BypassListForUsers";
     }
 
     if ( $configuration.UpdatesAtLogon ) {
