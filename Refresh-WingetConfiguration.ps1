@@ -120,10 +120,15 @@ if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
 }
 Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments."
 
-$command  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
+$installCommand  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
+$uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninstall"
 
 if ( $commandLineArguments -ne $previousCommandLineArguments ) {
-    iex $command;
+    if ( $configuration.ReinstallOnRefresh ) {
+        iex $uninstallCommand;
+        Write-LogFile "Removed WUA for Reinstall."
+    }
+    iex $installCommand;
     Write-LogFile "Updated WUA."
 } else {
     Write-LogFile "Skipped updating WUA."
