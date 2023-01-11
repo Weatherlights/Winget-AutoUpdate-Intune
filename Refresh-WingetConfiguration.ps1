@@ -81,6 +81,10 @@ function Get-CommandLine {
         $commandLineArguments += " -DisableWAUAutoUpdate";
     }
 
+    if ( $configuration.InstallUserContext ) {
+        $commandLineArguments += " -InstallUserContext";
+    }
+
     return $commandLineArguments
 }
 
@@ -110,7 +114,6 @@ if ( Test-Path -Path $PolicyListLocation ) {
 }
 
 # Generate filename for the include/exclude list.
-
 $commandLineArguments = Get-CommandLine -configuration $configuration;
 Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
 if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {

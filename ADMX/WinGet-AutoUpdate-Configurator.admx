@@ -165,6 +165,29 @@
       </disabledValue>
 </policy>
 
+<policy name="Winget-AutoUpdate-ReinstallOnRefresh" class="Machine" displayName="$(string.ReinstallOnRefreshdisplayName)" explainText="$(string.ReinstallOnRefreshexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="ReinstallOnRefresh">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+</policy>
+
+<policy name="Winget-AutoUpdate-InstallUserContext" class="Machine" displayName="$(string.InstallUserContextdisplayName)" explainText="$(string.InstallUserContextexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="InstallUserContext">
+	<parentCategory ref="Configuration"/>
+	<supportedOn ref="SupportedOn"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+</policy>
+
+
 
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-UpdatesAtTime -->
 <policy name="Winget-AutoUpdate-UpdatesAtTime" class="Machine" displayName="$(string.UpdatesAtTimedisplayName)" explainText="$(string.UpdatesAtTimeexplainText)" presentation="$(presentation.UpdatesAtTimePresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">

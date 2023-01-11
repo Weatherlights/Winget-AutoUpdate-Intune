@@ -39,6 +39,12 @@
       <string id="DisableWAUAutoUpdatedisplayName">Disable automatic updates</string>
       <string id="DisableWAUAutoUpdateexplainText">Disable Winget-AutoUpdate update checking. By default, WAU auto update if new version is available on Github.</string>
 
+      <string id="ReinstallOnRefreshdisplayName">Reinstall on Policy Update</string>
+      <string id="ReinstallOnRefreshexplainText">When enabled the Winget-Autoupdate-Configurator will reinstall WAU everytime when a policy is changed. This can be used to remove shortcuts.</string>
+
+      <string id="InstallUserContextdisplayName">Install in usercontext</string>
+      <string id="InstallUserContextexplainText">Install WAU with system and user context executions. This can be used to update software that is only installed within the user profile.</string>
+
 
       <string id="NotificationLevelFull">Everything</string>
       <string id="NotificationLevelSuccessOnly">Only success</string>
