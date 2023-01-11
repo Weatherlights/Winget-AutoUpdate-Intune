@@ -3,7 +3,7 @@
 .SYNOPSIS
     Writes an entry to the log file.
 .DESCRIPTION
-    Writes an entry to the PolicyApplicator Log file in the temporary folder.
+    Writes an entry to the WinGet-AutoUpdate-Configurato Log file in the temporary folder.
 .INPUTS
     string
 .PARAMETER InputObject
@@ -13,14 +13,14 @@
 .NOTES
     Created by Hauke Goetze
 .LINK
-    https://policyapplicator.weatherlights.com
+    https://github.com/Weatherlights/Winget-AutoUpdate-Intune
 #>
     param(
         [Parameter(Mandatory=$True)][string]$InputObject,
         [String]$Component = "WinGet-AutoUpdate-Configurator"
     );
 
-    $LogDir = "$env:temp\WinGet-AutoUpdate-Configurator.log"
+    $LogDir = "$env:programdata\Winget-AutoUpdate-Configurator\WinGet-AutoUpdate-Configurator.log"
     $time = Get-Date -Format "HH:mm:ss";
     $date = Get-Date -Format "MM-dd-yyyy";
     $logmessage = "<![LOG[$InputObject]LOG]!><time=`"$time.0000000`" date=`"$date`" component=`"$Component`" context=`"`" type=`"`" thread=`"`" file=`"`">";
