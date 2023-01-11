@@ -1,20 +1,22 @@
-﻿$PolicyRegistryLocation = "HKLM:\SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate";
+﻿<#
+.SYNOPSIS
+Installs and configures Winget-AutoUpdate
+
+.DESCRIPTION
+This script runs on a regular bases to read and apply the Winget-AutoUpdate configuration from the registry.
+https://github.com/Weatherlights/Winget-AutoUpdate-Intune
+
+#>
+
+
+$PolicyRegistryLocation = "HKLM:\SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate";
 $PolicyListLocation = $PolicyRegistryLocation + "\List"
-
 $DataDir = "$env:Programdata\Winget-AutoUpdate-Configurator\";
-
 $scriptlocation = $MyInvocation.MyCommand.Path + "\.."
 
 Import-Module "$scriptLocation\WinGet-AutoUpdate-Configurator\Generic.psm1"
 
-$InstallDir = "C:\Users\hauke\GitHub\Winget-AutoUpdate-Intune"
-
-
-if ( !(Test-Path -Path $DataDir) ) {
-    md $DataDir -Force
-    Write-LogFile -InputObject "Created non existing directory $DataDir."
-}
-
+<# FUNCTIONS #>
 
 function Write-ListConfigToFile {
     param(
@@ -88,6 +90,13 @@ function Get-CommandLine {
     return $commandLineArguments
 }
 
+
+<# MAIN #>
+
+if ( !(Test-Path -Path $DataDir) ) {
+    md $DataDir -Force
+    Write-LogFile -InputObject "Created non existing directory $DataDir."
+}
 
 
 if ( Test-Path -Path $PolicyRegistryLocation ) {
