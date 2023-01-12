@@ -24,4 +24,4 @@ Take a look into the [Wiki](https://github.com/Weatherlights/Winget-AutoUpdate-I
 
 WinGet-Autoupdate-Configurator is also available from the Microsoft Store and can be deployed using the Microsoft Store App (new) mechanism:
 
-<a href="ms-windows-store://pdp/?productid=XP89BSK82W9J28"><img src="https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width="280"/></a>
+<a href="https://apps.microsoft.com/store/detail/wingetautoupdateconfigurator/XP89BSK82W9J28"><img src="https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width="280"/></a>
