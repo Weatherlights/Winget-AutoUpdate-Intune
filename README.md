@@ -3,9 +3,6 @@ WinGet-AutoUpdate-Configurator is based on WinGet-AutoUpdate (WAU) and allows yo
 
 The WinGet-AutoUpdate-Configurator takes the configuration from Microsoft Intune and applies it to WinGet-AutoUpdate so your users stay up-to-date with their software.
 
-WinGet-Autoupdate-Configurator is also available from the Microsoft Store and can be deployed using the Microsoft Store App (new) mechanism:
-<a href="ms-windows-store://pdp/?productid=XP89BSK82W9J28"><img src="https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width="280"/></a>
-
 ![image](https://user-images.githubusercontent.com/96626929/150645599-9460def4-0818-4fe9-819c-dd7081ff8447.png)
 
 ## Intune integration using ADMX backed profiles
@@ -24,3 +21,7 @@ You can also configure your white- and blacklist from within the Microsoft Intun
 
 ## Where to start from here
 Take a look into the [Wiki](https://github.com/Weatherlights/Winget-AutoUpdate-Intune/wiki)... I just wrote some stuff together that helps you getting started.
+
+WinGet-Autoupdate-Configurator is also available from the Microsoft Store and can be deployed using the Microsoft Store App (new) mechanism:
+
+<a href="ms-windows-store://pdp/?productid=XP89BSK82W9J28"><img src="https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width="280"/></a>
