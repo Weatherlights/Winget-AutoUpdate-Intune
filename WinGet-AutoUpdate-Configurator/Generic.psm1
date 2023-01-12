@@ -20,7 +20,7 @@
         [String]$Component = "WinGet-AutoUpdate-Configurator"
     );
 
-    $LogDir = "$env:programdata\Winget-AutoUpdate-Configurator\WinGet-AutoUpdate-Configurator.log"
+    $LogDir = "$env:temp\$env:COMPUTERNAME-WinGet-AutoUpdate-Configurator.log"
     $time = Get-Date -Format "HH:mm:ss";
     $date = Get-Date -Format "MM-dd-yyyy";
     $logmessage = "<![LOG[$InputObject]LOG]!><time=`"$time.0000000`" date=`"$date`" component=`"$Component`" context=`"`" type=`"`" thread=`"`" file=`"`">";
