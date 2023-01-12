@@ -1,4 +1,4 @@
-﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.02.0001" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
+﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.02.0002" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
 	<policyNamespaces>
 		<target prefix="WinGet-AutoUpdate-Configurator" namespace="WinGet-AutoUpdate-Configurator.Configuration.Policies"/>
 	</policyNamespaces>
@@ -144,17 +144,6 @@
 </policy>
 
 <policy name="Winget-AutoUpdate-DoNotUpdate" class="Machine" displayName="$(string.DoNotUpdatedisplayName)" explainText="$(string.DoNotUpdateexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="DoNotUpdate">
-	<parentCategory ref="Configuration"/>
-	<supportedOn ref="SupportedOn"/>
-      <enabledValue>
-        <decimal value="1"/>
-      </enabledValue>
-      <disabledValue>
-        <decimal value="0"/>
-      </disabledValue>
-</policy>
-
-<policy name="Winget-AutoUpdate-DisableWAUAutoUpdate" class="Machine" displayName="$(string.DisableWAUAutoUpdatedisplayName)" explainText="$(string.DisableWAUAutoUpdateexplainText)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate" valueName="DisableWAUAutoUpdate">
 	<parentCategory ref="Configuration"/>
 	<supportedOn ref="SupportedOn"/>
       <enabledValue>

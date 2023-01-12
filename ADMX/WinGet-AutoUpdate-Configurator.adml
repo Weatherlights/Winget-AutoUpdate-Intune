@@ -36,9 +36,6 @@
       <string id="DoNotUpdatedisplayName">Do not update on install</string>
       <string id="DoNotUpdateexplainText">Do not run Winget-AutoUpdate after installation. By default, Winget-AutoUpdate is run just after installation.</string>
 
-      <string id="DisableWAUAutoUpdatedisplayName">Disable automatic updates</string>
-      <string id="DisableWAUAutoUpdateexplainText">Disable Winget-AutoUpdate update checking. By default, WAU auto update if new version is available on Github.</string>
-
       <string id="ReinstallOnRefreshdisplayName">Reinstall on Policy Update</string>
       <string id="ReinstallOnRefreshexplainText">When enabled the Winget-Autoupdate-Configurator will reinstall WAU everytime when a policy is changed. This can be used to remove shortcuts.</string>
 

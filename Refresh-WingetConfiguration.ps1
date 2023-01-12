@@ -41,7 +41,7 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "-silent -NoClean -ListPath `"$DataDir`""
+    $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -ListPath `"$DataDir`""
 
     if ( $configuration.NotificationLevel ) {
         $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
@@ -85,10 +85,6 @@ function Get-CommandLine {
 
     if ( $configuration.DoNotUpdate ) {
         $commandLineArguments += " -DoNotUpdate";
-    }
-
-    if ( $configuration.DisableWAUAutoUpdate ) {
-        $commandLineArguments += " -DisableWAUAutoUpdate";
     }
 
     if ( $configuration.InstallUserContext ) {
