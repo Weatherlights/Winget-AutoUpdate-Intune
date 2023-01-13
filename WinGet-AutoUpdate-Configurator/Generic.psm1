@@ -28,7 +28,7 @@
     $size=(Get-Item $LogDir).length
 
     if ( $size -gt 5120000 ) {
-        Move-Item -Path $LogDir -Destination "$LogDir.bak"
+        Move-Item -Path $LogDir -Destination "$LogDir.bak" -Force
     }
     
 }

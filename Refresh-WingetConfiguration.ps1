@@ -150,5 +150,20 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     Write-LogFile "Skipped updating WUA."
 }
 
+
 Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
 Write-LogFile -InputObject "Stored commandline arguments."
+
+$winget_autoupdate_logpath = "$env:Programdata\Winget-AutoUpdate\logs\updates.log"
+if ( Test-PAth -path $winget_autoupdate_logpath ) {
+        
+    Copy-Item -Path $winget_autoupdate_logpath -Destination "$env:temp\$env:computername-Winget-AutoUpdate-Updates.log" -Force
+    Write-LogFile -InputObject "Created copy of logfiles for intune diagnostics."
+
+    # Rotate log since this is not implemented in WAU.
+    $size=(Get-Item $winget_autoupdate_logpath).length
+    if ( $size -gt 5120000 ) {
+        Move-Item -Path $winget_autoupdate_logpath -Destination "$winget_autoupdate_logpath.bak" -Force
+        Write-LogFile -InputObject "Rotated Winget-Autoupdate log $winget_autoupdate_logpath."
+    }
+}
