@@ -138,12 +138,12 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
     if ( $commandLineArguments -ne $previousCommandLineArguments ) {
         if ( $configuration.ReinstallOnRefresh ) {
             iex $uninstallCommand;
-            Write-LogFile "Removed WUA for Reinstall."
+            Write-LogFile "Removed WAU for Reinstall."
         }
         iex $installCommand;
-        Write-LogFile "Updated WUA."
+        Write-LogFile "Updated WAU."
     } else {
-        Write-LogFile "Skipped updating WUA."
+        Write-LogFile "Skipped updating WAU."
     }
 
 
