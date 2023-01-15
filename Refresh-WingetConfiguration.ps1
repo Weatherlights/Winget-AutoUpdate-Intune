@@ -106,55 +106,55 @@ if ( !(Test-Path -Path $DataDir) ) {
 if ( Test-Path -Path $PolicyRegistryLocation ) {
     $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;   
     Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation"; 
+    if ( Test-Path -Path $PolicyListLocation ) {
+        $list = Get-ItemProperty -Path $PolicyListLocation
+
+        $listFileName = "excluded_apps.txt"
+        if ( $configuration.UseWhiteList ) {
+            $listFileName = "included_apps.txt";
+        }
+        $ListLocation = "$DataDir\$listFileName";
+
+        Write-ListConfigToFile -FilePath $ListLocation -List $list;
+
+        Write-LogFile -InputObject "Parsed list to $ListLocation."
+    } else {
+        Write-LogFile -InputObject "No List provided."
+    }
+
+    # Generate filename for the include/exclude list.
+    $commandLineArguments = Get-CommandLine -configuration $configuration;
+    Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
+    if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
+        $previousCommandLineArguments = Get-Content -Path "$DataDir\LastCommand.txt"
+    } else {
+        $previousCommandLineArguments = "";
+    }
+    Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments."
+
+    $installCommand  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
+    $uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninstall"
+
+    if ( $commandLineArguments -ne $previousCommandLineArguments ) {
+        if ( $configuration.ReinstallOnRefresh ) {
+            iex $uninstallCommand;
+            Write-LogFile "Removed WUA for Reinstall."
+        }
+        iex $installCommand;
+        Write-LogFile "Updated WUA."
+    } else {
+        Write-LogFile "Skipped updating WUA."
+    }
+
+
+    Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
+    Write-LogFile -InputObject "Stored commandline arguments."
 } else {
      Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet."
 }
 
-if ( Test-Path -Path $PolicyListLocation ) {
-    $list = Get-ItemProperty -Path $PolicyListLocation
-
-    $listFileName = "excluded_apps.txt"
-    if ( $configuration.UseWhiteList ) {
-        $listFileName = "included_apps.txt";
-    }
-    $ListLocation = "$DataDir\$listFileName";
-
-    Write-ListConfigToFile -FilePath $ListLocation -List $list;
-
-    Write-LogFile -InputObject "Parsed list to $ListLocation."
-} else {
-    Write-LogFile -InputObject "No List provided."
-}
-
-# Generate filename for the include/exclude list.
-$commandLineArguments = Get-CommandLine -configuration $configuration;
-Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
-if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
-    $previousCommandLineArguments = Get-Content -Path "$DataDir\LastCommand.txt"
-} else {
-    $previousCommandLineArguments = "";
-}
-Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments."
-
-$installCommand  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
-$uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninstall"
-
-if ( $commandLineArguments -ne $previousCommandLineArguments ) {
-    if ( $configuration.ReinstallOnRefresh ) {
-        iex $uninstallCommand;
-        Write-LogFile "Removed WUA for Reinstall."
-    }
-    iex $installCommand;
-    Write-LogFile "Updated WUA."
-} else {
-    Write-LogFile "Skipped updating WUA."
-}
-
-
-Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
-Write-LogFile -InputObject "Stored commandline arguments."
-
 $winget_autoupdate_logpath = "$env:Programdata\Winget-AutoUpdate\logs\updates.log"
+
 if ( Test-PAth -path $winget_autoupdate_logpath ) {
         
     Copy-Item -Path $winget_autoupdate_logpath -Destination "$env:temp\$env:computername-Winget-AutoUpdate-Updates.log" -Force
