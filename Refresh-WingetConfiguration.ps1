@@ -61,6 +61,8 @@ function Get-CommandLine {
 
     if ( $configuration.UpdatesInterval ) {
         $commandLineArguments += " -UpdatesInterval " + $configuration.UpdatesInterval;
+    } else {
+        $commandLineArguments += " -UpdatesInterval Never";
     }
 
     if ( $configuration.UpdatesAtTime ) {
@@ -83,7 +85,7 @@ function Get-CommandLine {
         $commandLineArguments += " -StartMenuShortcut";
     }
 
-    if ( $configuration.DoNotUpdate ) {
+    if ( $configuration.DoNotUpdate -ne 0) {
         $commandLineArguments += " -DoNotUpdate";
     }
 
@@ -121,41 +123,42 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
     } else {
         Write-LogFile -InputObject "No List provided."
     }
-
-    # Generate filename for the include/exclude list.
-    $commandLineArguments = Get-CommandLine -configuration $configuration;
-    Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
-    if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
-        $previousCommandLineArguments = Get-Content -Path "$DataDir\LastCommand.txt"
-    } else {
-        $previousCommandLineArguments = "";
-    }
-    Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments."
-
-    $installCommand  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
-    $uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninstall"
-
-    if ( $commandLineArguments -ne $previousCommandLineArguments ) {
-        if ( $configuration.ReinstallOnRefresh ) {
-            iex $uninstallCommand;
-            Write-LogFile "Removed WAU for Reinstall."
-        }
-        iex $installCommand;
-        Write-LogFile "Updated WAU."
-    } else {
-        Write-LogFile "Skipped updating WAU."
-    }
-
-
-    Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
-    Write-LogFile -InputObject "Stored commandline arguments."
 } else {
      Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet."
 }
 
-$winget_autoupdate_logpath = "$env:Programdata\Winget-AutoUpdate\logs\updates.log"
 
-if ( Test-PAth -path $winget_autoupdate_logpath ) {
+# Generate filename for the include/exclude list.
+$commandLineArguments = Get-CommandLine -configuration $configuration;
+Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
+if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
+    $previousCommandLineArguments = Get-Content -Path "$DataDir\LastCommand.txt"
+} else {
+    $previousCommandLineArguments = "";
+}
+Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments."
+
+$installCommand  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
+$uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninstall"
+
+if ( $commandLineArguments -ne $previousCommandLineArguments ) {
+    if ( $configuration.ReinstallOnRefresh ) {
+        iex $uninstallCommand;
+        Write-LogFile "Removed WAU for Reinstall."
+    }
+    iex $installCommand;
+    Write-LogFile "Updated WAU."
+} else {
+    Write-LogFile "Skipped updating WAU."
+}
+
+
+Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
+Write-LogFile -InputObject "Stored commandline arguments."
+
+    $winget_autoupdate_logpath = "$env:Programdata\Winget-AutoUpdate\logs\updates.log"
+
+    if ( Test-PAth -path $winget_autoupdate_logpath ) {
         
     Copy-Item -Path $winget_autoupdate_logpath -Destination "$env:temp\$env:computername-Winget-AutoUpdate-Updates.log" -Force
     Write-LogFile -InputObject "Created copy of logfiles for intune diagnostics."
