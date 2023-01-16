@@ -1,4 +1,4 @@
-﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.02.0002" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
+﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.02.0005" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
 	<policyNamespaces>
 		<target prefix="WinGet-AutoUpdate-Configurator" namespace="WinGet-AutoUpdate-Configurator.Configuration.Policies"/>
 	</policyNamespaces>

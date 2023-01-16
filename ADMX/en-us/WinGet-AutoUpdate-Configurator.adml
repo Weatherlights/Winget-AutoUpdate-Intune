@@ -10,7 +10,9 @@
       <string id="ListexplainText">Provide the WinGet IDs of applications you want to include or exclude.</string>
 
       <string id="UpdatesIntervalDisplayName">Update frequency</string>
-      <string id="UpdatesIntervalexplainText">Specify the update frequency: Daily (Default), BiDaily, Weekly, BiWeekly, Monthly or Never</string>
+      <string id="UpdatesIntervalexplainText">Specify the update frequency: Daily (Default), BiDaily, Weekly, BiWeekly, Monthly or Never.
+
+If you do not configure or disable this policy Winget-Autoupdate will not run on a schedule.</string>
 
       <string id="RunOnMetereddisplayName">Run on metered connection</string>
       <string id="RunOnMeteredexplainText">Run WAU on metered connection. Default No.</string>
@@ -31,10 +33,12 @@
       <string id="DesktopShortcutexplainText">Create a shortcut for user interaction on the Desktop to run task Winget-AutoUpdate</string>
 
       <string id="StartMenuShortcutdisplayName">Startmenu Shortcut</string>
-      <string id="StartMenuShortcutexplainText">Create shortcuts for user interaction in the Start Menu to run task Winget-AutoUpdate, open Logs and Web Help</string>
+      <string id="StartMenuShortcutexplainText">Create shortcuts for user interaction in the Start Menu to run task Winget-AutoUpdate, open Logs and Web Help.</string>
 
       <string id="DoNotUpdatedisplayName">Do not update on install</string>
-      <string id="DoNotUpdateexplainText">Do not run Winget-AutoUpdate after installation. By default, Winget-AutoUpdate is run just after installation.</string>
+      <string id="DoNotUpdateexplainText">Do not run Winget-AutoUpdate after installation.
+
+If you enable or not configure this policy Winget-Autoupdate will not run after installation. If you disable this policy Winget-AutoUpdate will run after each installation.</string>
 
       <string id="ReinstallOnRefreshdisplayName">Reinstall on Policy Update</string>
       <string id="ReinstallOnRefreshexplainText">When enabled the Winget-Autoupdate-Configurator will reinstall WAU everytime when a policy is changed. This can be used to remove shortcuts.</string>
