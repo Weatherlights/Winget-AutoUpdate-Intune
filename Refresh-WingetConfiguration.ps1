@@ -34,7 +34,74 @@ function Write-ListConfigToFile {
     Out-File -FilePath $FilePath -InputObject $parsedList
 }
 
+# by Thomas Kur from https://github.com/ThomasKur/ModernWorkplaceClientCenter licensed under GPL-3
+function Invoke-TranslateMDMEnrollmentType {
+    <#
+    .SYNOPSIS
+         This function translates the MDM Enrollment Type in a readable string.
+    .DESCRIPTION
+         This function translates the MDM Enrollment Type in a readable string.
+ 
+    .EXAMPLE
+         Invoke-TranslateMDMEnrollmentType
+    #>
+    [OutputType([String])]
+    [CmdletBinding()]
+    param(
+        [Int]$Id
+    )
+    switch($Id){
+        0 {"Not enrolled"}
+        6 {"MDM enrolled"}
+        13 {"Azure AD joined"}
+    }
+}
 
+# by Thomas Kur from https://github.com/ThomasKur/ModernWorkplaceClientCenter licensed under GPL-3
+function Get-MDMEnrollmentStatus {
+    <#
+    .Synopsis
+    Get Windows 10 MDM Enrollment Status.
+ 
+    .Description
+    Get Windows 10 MDM Enrollment Status with Translated Error Codes.
+ 
+    Returns $null if Device is not enrolled to an MDM.
+ 
+    .Example
+    # Get Windows 10 MDM Enrollment status
+    Get-MDMEnrollmentStatus
+    #>
+    param()
+    #Locate correct Enrollment Key
+    $EnrollmentKey = Get-Item -Path HKLM:\SOFTWARE\Microsoft\Enrollments\* | Get-ItemProperty | Where-Object -FilterScript {$null -ne $_.UPN}
+    if($EnrollmentKey){
+        Add-Member -InputObject $EnrollmentKey -MemberType NoteProperty -Name EnrollmentTypeText -Value (Invoke-TranslateMDMEnrollmentType -Id ($EnrollmentKey.EnrollmentType))
+    } else {
+        Write-Error "Device is not enrolled to MDM."
+    }
+    return $EnrollmentKey
+}
+
+
+function Get-DomainJoinStatus {
+    <#
+    .Synopsis
+    Get Windows 10 Domain Join.
+ 
+    .Description
+    Get Windows 10 Domain Join Status.
+ 
+    Returns $null if Device is not domain joined.
+ 
+    .Example
+    # Get domain join status
+    Get-DomainJoinStatus
+    #>
+    param()
+  
+    (Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain
+}
 
 function Get-CommandLine {
     param(
@@ -123,13 +190,20 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
     } else {
         Write-LogFile -InputObject "No List provided."
     }
+
+    $commandLineArguments = Get-CommandLine -configuration $configuration;
 } else {
      Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet."
+     if ( !(Get-MDMEnrollmentStatus ) -and !(Get-DomainJoinStatus) ) {
+        $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -StartMenuShortcut"
+     } else {
+        $commandLineArguments = Get-CommandLine -configuration $configuration;
+     }
+
 }
 
 
-# Generate filename for the include/exclude list.
-$commandLineArguments = Get-CommandLine -configuration $configuration;
+
 Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
 if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
     $previousCommandLineArguments = Get-Content -Path "$DataDir\LastCommand.txt"
