@@ -17,13 +17,36 @@
 #>
     param(
         [Parameter(Mandatory=$True)][string]$InputObject,
-        [String]$Component = "WinGet-AutoUpdate-Configurator"
+        [String]$Component = "WinGet-AutoUpdate-Configurator",
+        
+        [parameter(Mandatory = $true, HelpMessage = "Severity for the log entry. 1 for Informational, 2 for Warning and 3 for Error.")]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet("1", "2", "3")]
+        [string]$Severity
     );
 
     $LogDir = "$env:temp\$env:COMPUTERNAME-WinGet-AutoUpdate-Configurator.log"
-    $time = Get-Date -Format "HH:mm:ss";
-    $date = Get-Date -Format "MM-dd-yyyy";
-    $logmessage = "<![LOG[$InputObject]LOG]!><time=`"$time.0000000`" date=`"$date`" component=`"$Component`" context=`"`" type=`"`" thread=`"`" file=`"`">";
+
+    # Construct time stamp for log entry
+     if (-not(Test-Path -Path 'variable:global:TimezoneBias')) {
+        [string]$global:TimezoneBias = [System.TimeZoneInfo]::Local.GetUtcOffset((Get-Date)).TotalMinutes
+        if ($TimezoneBias -match "^-") {
+            $TimezoneBias = $TimezoneBias.Replace('-', '+')
+        }
+        else {
+            $TimezoneBias = '-' + $TimezoneBias
+        }
+    }
+   $Time = -join @((Get-Date -Format "HH:mm:ss.fff"), $TimezoneBias)
+        
+   # Construct date for log entry
+   $Date = (Get-Date -Format "MM-dd-yyyy")
+    
+    # Construct context for log entry
+    $Context = $([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)
+
+
+    $logmessage = "<![LOG[$InputObject]LOG]!><time=`"$($time)`" date=`"$($date)`" component=`"$($Component)`" context=`"$($Context)`" type=`"$($Severity)`" thread=`"$($PID)`" file=`"`">";
     Out-File -FilePath $LogDir -Append -InputObject $logmessage -Encoding UTF8;
     $size=(Get-Item $LogDir).length
 

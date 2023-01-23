@@ -168,13 +168,13 @@ function Get-CommandLine {
 
 if ( !(Test-Path -Path $DataDir) ) {
     md $DataDir -Force
-    Write-LogFile -InputObject "Created non existing directory $DataDir."
+    Write-LogFile -InputObject "Created non existing directory $DataDir." -Severity 1
 }
 
 
 if ( Test-Path -Path $PolicyRegistryLocation ) {
     $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;   
-    Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation"; 
+    Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation" -Severity 1; 
     if ( Test-Path -Path $PolicyListLocation ) {
         $list = Get-ItemProperty -Path $PolicyListLocation
 
@@ -186,33 +186,31 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
 
         Write-ListConfigToFile -FilePath $ListLocation -List $list;
 
-        Write-LogFile -InputObject "Parsed list to $ListLocation."
+        Write-LogFile -InputObject "Parsed list to $ListLocation." -Severity 1
     } else {
-        Write-LogFile -InputObject "No List provided."
+        Write-LogFile -InputObject "No List provided." -Severity 1
     }
 
     $commandLineArguments = Get-CommandLine -configuration $configuration;
 } else {
-     Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet."
+     Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet." -Severity 2
      if ( Get-MDMEnrollmentStatus -or Get-DomainJoinStatus ) {
         $commandLineArguments = Get-CommandLine -configuration $configuration;
-        Write-LogFile -InputObject "The client MDM or domain joined. Therefore the default enterprise configuration is enabled."
+        Write-LogFile -InputObject "The client MDM or domain joined. Therefore the default enterprise configuration is enabled." -Severity 1
      } else {
         $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -StartMenuShortcut"
-        Write-LogFile -InputObject "The not domain joined or MDM enrolled. Therefore the default enduser configuration is enabled."
+        Write-LogFile -InputObject "The not domain joined or MDM enrolled. Therefore the default enduser configuration is enabled." -Severity 1
      }
 
 }
 
-
-
-Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated."
+Write-LogFile -InputObject "Commandline arguments $commandLineArguments generated." -Severity 1
 if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
     $previousCommandLineArguments = Get-Content -Path "$DataDir\LastCommand.txt"
 } else {
     $previousCommandLineArguments = "";
 }
-Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments."
+Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments." -Severity 1
 
 $installCommand  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
 $uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninstall"
@@ -220,29 +218,29 @@ $uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninst
 if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     if ( $configuration.ReinstallOnRefresh ) {
         iex $uninstallCommand;
-        Write-LogFile "Removed WAU for Reinstall."
+        Write-LogFile "Removed WAU for Reinstall." -Severity 1
     }
     iex $installCommand;
-    Write-LogFile "Updated WAU."
+    Write-LogFile "Updated WAU." -Severity 1
 } else {
-    Write-LogFile "Skipped updating WAU."
+    Write-LogFile "Skipped updating WAU." -Severity 1
 }
 
 
 Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
-Write-LogFile -InputObject "Stored commandline arguments."
+Write-LogFile -InputObject "Stored commandline arguments." -Severity 1
 
     $winget_autoupdate_logpath = "$env:Programdata\Winget-AutoUpdate\logs\updates.log"
 
     if ( Test-PAth -path $winget_autoupdate_logpath ) {
         
     Copy-Item -Path $winget_autoupdate_logpath -Destination "$env:temp\$env:computername-Winget-AutoUpdate-Updates.log" -Force
-    Write-LogFile -InputObject "Created copy of logfiles for intune diagnostics."
+    Write-LogFile -InputObject "Created copy of logfiles for intune diagnostics." -Severity 1
 
     # Rotate log since this is not implemented in WAU.
     $size=(Get-Item $winget_autoupdate_logpath).length
     if ( $size -gt 5120000 ) {
         Move-Item -Path $winget_autoupdate_logpath -Destination "$winget_autoupdate_logpath.bak" -Force
-        Write-LogFile -InputObject "Rotated Winget-Autoupdate log $winget_autoupdate_logpath."
+        Write-LogFile -InputObject "Rotated Winget-Autoupdate log $winget_autoupdate_logpath." -Severity 1
     }
 }
