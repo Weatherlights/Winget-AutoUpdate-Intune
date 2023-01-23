@@ -194,10 +194,12 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
     $commandLineArguments = Get-CommandLine -configuration $configuration;
 } else {
      Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet."
-     if ( !(Get-MDMEnrollmentStatus ) -and !(Get-DomainJoinStatus) ) {
-        $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -StartMenuShortcut"
-     } else {
+     if ( Get-MDMEnrollmentStatus -or Get-DomainJoinStatus ) {
         $commandLineArguments = Get-CommandLine -configuration $configuration;
+        Write-LogFile -InputObject "The client MDM or domain joined. Therefore the default enterprise configuration is enabled."
+     } else {
+        $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -StartMenuShortcut"
+        Write-LogFile -InputObject "The not domain joined or MDM enrolled. Therefore the default enduser configuration is enabled."
      }
 
 }
