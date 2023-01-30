@@ -193,7 +193,7 @@ function Invoke-ModCreation {
         
     } else {
         Write-LogFile -InputObject "No Mods location detected." -Severity 1
-        Get-ChildItem $modsDir | where { $_.BaseName -ne "_Mods-Functions" | Remove-Item;
+        Get-ChildItem $modsDir | where { $_.BaseName -ne "_Mods-Functions" } | Remove-Item;
     }
     Write-LogFile -InputObject "Finished mod creation." -Severity 1
 }
