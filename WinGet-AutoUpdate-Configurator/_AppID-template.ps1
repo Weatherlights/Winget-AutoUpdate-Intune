@@ -45,7 +45,7 @@ if ( $Configuration ) {
         $Proc = @();
         ForEach ( $processToClose in $Configuration."StopModsProc" ) {
             $processToCloseEXE = $processToClose.Process;
-            $Wait += $processToCloseEXE
+            $Proc += $processToCloseEXE
         }
         Stop-ModsProc $Proc;
     }
@@ -54,13 +54,17 @@ if ( $Configuration ) {
         $Wait = @();
         ForEach ( $processToWaitFor in $Configuration."WaitModsProc" ) {
             $processToWaitForEXE = $processToWaitFor.Process;
-            $Proc += $processToWaitForEXE
+            $Wait += $processToWaitForEXE
         }
         Wait-ModsProc $Wait;
     }
 
     if ( $Configuration."UninstallModsApp" ) {
-        $App = $Configuration."UninstallModsApp"
+        $App = @();
+        ForEach ( $appToRemove in $Configuration."UninstallModsApp" ) {
+            $appToRemoveApp = $appToRemove.App;
+            $App += $appToRemoveApp
+        }
         Uninstall-ModsApp $App;
     }
 

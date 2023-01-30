@@ -9,7 +9,12 @@
       <string id="Mods">Mods</string>
       <string id="SupportedOn">Windows 10 and Windows 11</string>
       <string id="ModsConfigDisplayName">Modification Configuration</string>
-      <string id="ModsConfigexplainText">This feature allows you to invoke additional modifications to mitigate certain update behavior.</string>
+      <string id="ModsConfigexplainText">This feature allows you to invoke additional modifications to mitigate certain update behavior.
+
+Please provide the AppId and the step to modify as a name seperated by a minus. Example: VideoLAN.VLC-preinstall will run the modification step before the VLC media player is updated.
+
+Provide the corresponding modification as a value. You should provide your modification as a single line JSON file. Example {"StopModsProc" : [{"Process":"vlc"}]} will close the vlc.exe file if it is open during the step provided in the name field.
+</string>
 
       <string id="ListDisplayName">Application List</string>
       <string id="ListexplainText">Provide the WinGet IDs of applications you want to include or exclude.</string>
