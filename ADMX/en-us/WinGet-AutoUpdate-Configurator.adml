@@ -58,7 +58,9 @@ If you enable or not configure this policy Winget-Autoupdate will not run after 
       <string id="InstallUserContextexplainText">Install WAU with system and user context executions. This can be used to update software that is only installed within the user profile.</string>
 
       <string id="ModsPathdisplayName">Mods Path</string>
-      <string id="ModsPathexplainText">Get mods from Path (URL/UNC/Local)</string>
+      <string id="ModsPathexplainText">Get mods from Path (URL/UNC/Local)
+
+Please leave this unconfigured or disabled if you use the Modification Configuration feature.</string>
 
       <string id="BypassListForUsersdisplayName">Bypass Application List for Users</string>
       <string id="BypassListForUsersexplainText">Configure WAU to bypass the Black/White list when run in user context</string>
