@@ -11,7 +11,8 @@ https://github.com/Weatherlights/Winget-AutoUpdate-Intune
 
 $PolicyRegistryLocation = "HKLM:\SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate";
 $PolicyListLocation = $PolicyRegistryLocation + "\List"
-$DataDir = "$env:Programdata\Winget-AutoUpdate-Configurator\";
+$PolicyModLocation = $PolicyRegistryLocation + "\Mods"
+$DataDir = "$env:Programdata\Winget-AutoUpdate-Configurator";
 $scriptlocation = $MyInvocation.MyCommand.Path + "\.."
 
 Import-Module "$scriptLocation\WinGet-AutoUpdate-Configurator\Generic.psm1"
@@ -108,7 +109,7 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -ListPath `"$DataDir`""
+    $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -ListPath `"$DataDir\`""
 
     if ( $configuration.NotificationLevel ) {
         $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
@@ -116,6 +117,8 @@ function Get-CommandLine {
 
     if ( $configuration.ModsPath ) {
         $commandLineArguments += " -ModsPath " + $configuration.ModsPath;
+    } else {
+        $commandLineArguments += " -ModsPath `"$DataDir\mods`"";
     }
 
     if ( $configuration.RunOnMetered ) {
@@ -163,6 +166,36 @@ function Get-CommandLine {
     return $commandLineArguments
 }
 
+function Invoke-ModCreation {
+    $modsDir = "$DataDir\mods"
+    
+    Write-LogFile -InputObject "Started mod creation." -Severity 1
+
+    if ( Test-Path -Path $PolicyModLocation ) {
+        Write-LogFile -InputObject "Detected Mods registry location." -Severity 1
+        $ModsList = Get-ItemProperty -Path $PolicyModLocation;
+        ForEach ( $Mod in $ModsList.PSObject.Properties | where { $_.Name -match "^.*?-(preinstall|upgrade|install|installed|preuninstall|uninstall|uninstalled)$" } )
+        {
+            $ModName = $Mod.Name;
+            Copy-Item -Path "$scriptlocation\WinGet-AutoUpdate-Configurator\_AppID-template.ps1" -Destination "$modsDir\$ModName.ps1" -Force
+            Write-LogFile -InputObject "Created mod $ModName." -Severity 1
+        }
+        ForEach ( $ItemToCleanUpCheck in ( Get-ChildItem $modsDir ) ) {
+            $appid = $ItemToCleanUpCheck.BaseName;
+            $fullFileName = $ItemToCleanUpCheck.FullName
+
+            if ( !$ModsList.$appid ) {
+                Remove-Item -Path $fullFileName -Force
+                Write-LogFile -InputObject "Removed $fullFileName. Since it is not configured anymore." -Severity 1
+            }
+        }
+        
+    } else {
+        Write-LogFile -InputObject "No Mods location detected." -Severity 1
+        Get-ChildItem $modsDir | Remove-Item;
+    }
+    Write-LogFile -InputObject "Finished mod creation." -Severity 1
+}
 
 <# MAIN #>
 
@@ -191,6 +224,8 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
         Write-LogFile -InputObject "No List provided." -Severity 1
     }
 
+    Invoke-ModCreation;
+    
     $commandLineArguments = Get-CommandLine -configuration $configuration;
 } else {
      Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet." -Severity 2

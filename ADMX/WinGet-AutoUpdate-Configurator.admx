@@ -1,4 +1,4 @@
-﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.02.0005" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
+﻿<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.04.0000" xsi:schemaLocation="" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
 	<policyNamespaces>
 		<target prefix="WinGet-AutoUpdate-Configurator" namespace="WinGet-AutoUpdate-Configurator.Configuration.Policies"/>
 	</policyNamespaces>
@@ -8,8 +8,25 @@
 			<definition name="SupportedOn" displayName="$(string.SupportedOn)"/>
 		</definitions>
 	</supportedOn>
-	<categories><category name="Configuration" displayName="$(string.Configuration)"/></categories>
+	<categories>
+      <category name="WAUC" displayName="$(string.WAUC)"/>
+      <category name="Configuration" displayName="$(string.Configuration)">
+        <parentCategory ref="WAUC" />
+      </category>
+      <category name="Mods" displayName="$(string.Mods)">
+        <parentCategory ref="WAUC" />
+      </category>
+    </categories>
+
     <policies>
+<policy name="Winget-AutoUpdate-ModsConfig" class="Machine" displayName="$(string.ModsConfigDisplayName)" explainText="$(string.ModsConfigexplainText)" presentation="$(presentation.ModsConfigPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
+	<parentCategory ref="Mods"/>
+	<supportedOn ref="SupportedOn"/>
+	<elements>
+        <list id="ModsConfig" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate\Mods" additive="true" explicitValue="true"/>
+	</elements>
+</policy>
+
 <!-- Policy SOFTWARE-Policies-weatherlights.com-Winget-AutoUpdate-List -->
 <policy name="Winget-AutoUpdate-List" class="Machine" displayName="$(string.ListDisplayName)" explainText="$(string.ListexplainText)" presentation="$(presentation.ListPresentation)" key="SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate">
 	<parentCategory ref="Configuration"/>
