@@ -172,6 +172,7 @@ function Invoke-ModCreation {
     Write-LogFile -InputObject "Started mod creation." -Severity 1
 
     if ( Test-Path -Path $PolicyModLocation ) {
+        
         Write-LogFile -InputObject "Detected Mods registry location." -Severity 1
         $ModsList = Get-ItemProperty -Path $PolicyModLocation;
         ForEach ( $Mod in $ModsList.PSObject.Properties | where { $_.Name -match "^.*?-(preinstall|upgrade|install|installed|preuninstall|uninstall|uninstalled)$" } )
@@ -183,8 +184,8 @@ function Invoke-ModCreation {
         ForEach ( $ItemToCleanUpCheck in ( Get-ChildItem $modsDir ) ) {
             $appid = $ItemToCleanUpCheck.BaseName;
             $fullFileName = $ItemToCleanUpCheck.FullName
-
-            if ( !$ModsList.$appid ) {
+            
+            if ( !$ModsList.$appid -and $appid -ne "_Mods-Functions" ) {
                 Remove-Item -Path $fullFileName -Force
                 Write-LogFile -InputObject "Removed $fullFileName. Since it is not configured anymore." -Severity 1
             }
@@ -192,7 +193,7 @@ function Invoke-ModCreation {
         
     } else {
         Write-LogFile -InputObject "No Mods location detected." -Severity 1
-        Get-ChildItem $modsDir | Remove-Item;
+        Get-ChildItem $modsDir | where { $_.BaseName -ne "_Mods-Functions" | Remove-Item;
     }
     Write-LogFile -InputObject "Finished mod creation." -Severity 1
 }
