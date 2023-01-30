@@ -62,8 +62,8 @@ if ( $Configuration ) {
     if ( $Configuration."UninstallModsApp" ) {
         $App = @();
         ForEach ( $appToRemove in $Configuration."UninstallModsApp" ) {
-            $appToRemoveApp = $appToRemove.App;
-            $App += $appToRemoveApp
+            $appToRemoveName = $appToRemove.App;
+            $App += $appToRemoveName
         }
         Uninstall-ModsApp $App;
     }
