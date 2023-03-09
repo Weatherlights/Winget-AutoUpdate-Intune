@@ -113,7 +113,7 @@ param(
 
 <# APP INFO #>
 
-$WAUVersion = "1.15.3"
+$WAUVersion = "1.16.4"
 
 <# FUNCTIONS #>
 
@@ -367,19 +367,24 @@ function Install-WingetAutoUpdate {
             New-ItemProperty $regPath -Name WAU_BypassListForUsers -Value 1 -PropertyType DWord -Force | Out-Null
         }
 
-        #Set ACL for users on logfile
-        $LogFile = "$WingetUpdatePath\logs\updates.log"
-        if (test-path $LogFile) {
-            $NewAcl = Get-Acl -Path $LogFile
-            $identity = New-Object System.Security.Principal.SecurityIdentifier S-1-5-11
-            $fileSystemRights = "Modify"
-            $type = "Allow"
-            $fileSystemAccessRuleArgumentList = $identity, $fileSystemRights, $type
-            $fileSystemAccessRule = New-Object -TypeName System.Security.AccessControl.FileSystemAccessRule -ArgumentList $fileSystemAccessRuleArgumentList
-            $NewAcl.SetAccessRule($fileSystemAccessRule)
-            Set-Acl -Path $LogFile -AclObject $NewAcl
-        }
+        #Log file and symlink initialization
+        . "$WingetUpdatePath\functions\Start-Init.ps1"
+        Start-Init
 
+        #Security check
+        Write-host "`nChecking Mods Directory:" -ForegroundColor Yellow
+        . "$WingetUpdatePath\functions\Invoke-ModsProtect.ps1"
+        $Protected = Invoke-ModsProtect "$WingetUpdatePath\mods"
+        if ($Protected -eq $True) {
+            Write-Host "The mods directory is now secured!`n" -ForegroundColor Green
+        }
+        elseif ($Protected -eq $False) {
+            Write-Host "The mods directory was already secured!`n" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Error: The mods directory couldn't be verified as secured!`n" -ForegroundColor Red
+        }
+                        
         #Create Shortcuts
         if ($StartMenuShortcut) {
             if (!(Test-Path "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)")) {
@@ -420,6 +425,9 @@ function Uninstall-WingetAutoUpdate {
 
             if (!$NoClean) {
                 Remove-Item $InstallLocation -Force -Recurse
+                if (Test-Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-updates.log") {
+                    Remove-Item -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-updates.log" -Force -ErrorAction SilentlyContinue | Out-Null
+                }
             }
             else {
                 #Keep critical files

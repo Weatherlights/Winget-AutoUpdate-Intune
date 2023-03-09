@@ -35,8 +35,24 @@ function Wait-ModsProc ($Wait) {
     Return
 }
 
-function Uninstall-ModsApp ($App) {
-    foreach ($app in $App)
+function Install-WingetID ($WingetIDInst) {
+    foreach ($app in $WingetIDInst)
+    {
+        & $Winget install --id $app --accept-package-agreements --accept-source-agreements -h
+    }
+    Return
+}
+
+function Uninstall-WingetID ($WingetIDUninst) {
+    foreach ($app in $WingetIDUninst)
+    {
+        & $Winget uninstall --id $app -e --accept-source-agreements -h
+    }
+    Return
+}
+
+function Uninstall-ModsApp ($AppUninst) {
+    foreach ($app in $AppUninst)
     {
         $InstalledSoftware = Get-ChildItem "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall"
         foreach ($obj in $InstalledSoftware){
@@ -152,7 +168,6 @@ function Uninstall-ModsApp ($App) {
     }
     Return
 }
-
 function Remove-ModsLnk ($Lnk) {
     foreach ($link in $Lnk)
     {
@@ -193,6 +208,13 @@ function Remove-ModsFile ($DelFile) {
         if (Test-Path "$file") {
             Remove-Item -Path $file -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
         }
+    }
+    Return
+}
+
+function Rename-ModsFile ($RenFile, $NewName) {
+    if (Test-Path "$RenFile") {
+        Rename-Item -Path $RenFile -NewName $NewName -Force -ErrorAction SilentlyContinue | Out-Null
     }
     Return
 }

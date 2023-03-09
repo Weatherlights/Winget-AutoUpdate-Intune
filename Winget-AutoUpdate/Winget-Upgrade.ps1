@@ -52,25 +52,9 @@ if ($IsSystem) {
     }
 
     #LogRotation if System
-    $Exception, $Rotate = Invoke-LogRotation $LogFile $MaxLogFiles $MaxLogSize
-    if ($Exception -eq $True) {
+    $LogRotate = Invoke-LogRotation $LogFile $MaxLogFiles $MaxLogSize
+    if ($LogRotate -eq $False) {
         Write-Log "An Exception occured during Log Rotation..."
-    }
-    if ($Rotate -eq $True) {
-        #Log Header
-        $Log = "##################################################`n#     CHECK FOR APP UPDATES - $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern)`n##################################################"
-        $Log | out-file -filepath $LogFile -Append
-        Write-Log "Running in System context"
-        if ($ActivateGPOManagement) {
-            Write-Log "Activated WAU GPO Management detected, comparing..."
-            if ($null -ne $ChangedSettings -and $ChangedSettings -ne 0) {
-                Write-Log "Changed settings detected and applied" "Yellow"
-            }
-            else {
-                Write-Log "No Changed settings detected" "Yellow"
-            }
-        }
-        Write-Log "Max Log Size reached: $MaxLogSize bytes - Rotated Logs"
     }
 
     #Run post update actions if necessary if run as System
@@ -127,11 +111,22 @@ if (Test-Network) {
 
             #Get External ListPath if run as System
             if ($WAUConfig.WAU_ListPath) {
-                Write-Log "WAU uses External Lists from: $($WAUConfig.WAU_ListPath.TrimEnd(" ", "\", "/"))"
-                if ($($WAUConfig.WAU_ListPath) -ne "GPO") {
-                    $NewList = Test-ListPath $WAUConfig.WAU_ListPath.TrimEnd(" ", "\", "/") $WAUConfig.WAU_UseWhiteList $WAUConfig.InstallLocation.TrimEnd(" ", "\")
+                $ListPathClean = $($WAUConfig.WAU_ListPath.TrimEnd(" ", "\", "/"))
+                Write-Log "WAU uses External Lists from: $ListPathClean"
+                if ($ListPathClean -ne "GPO") {
+                    $NewList = Test-ListPath $ListPathClean $WAUConfig.WAU_UseWhiteList $WAUConfig.InstallLocation.TrimEnd(" ", "\")
                     if ($ReachNoPath) {
-                        Write-Log "Couldn't reach/find/compare/copy from $($WAUConfig.WAU_ListPath.TrimEnd(" ", "\", "/"))..." "Red"
+                        Write-Log "Couldn't reach/find/compare/copy from $ListPathClean..." "Red"
+                        if ($ListPathClean -notlike "http*") {
+                            if (Test-Path -Path "$ListPathClean" -PathType Leaf) {
+                                Write-Log "PATH must end with a Directory, not a File..." "Red"
+                            }
+                        }
+                        else {
+                            if ($ListPathClean -match "_apps.txt") {
+                                Write-Log "PATH must end with a Directory, not a File..." "Red"
+                            }
+                        }
                         $Script:ReachNoPath = $False
                     }
                     if ($NewList) {
@@ -155,10 +150,11 @@ if (Test-Network) {
     
             #Get External ModsPath if run as System
             if ($WAUConfig.WAU_ModsPath) {
-                Write-Log "WAU uses External Mods from: $($WAUConfig.WAU_ModsPath.TrimEnd(" ", "\", "/"))"
-                $NewMods, $DeletedMods = Test-ModsPath $WAUConfig.WAU_ModsPath.TrimEnd(" ", "\", "/") $WAUConfig.InstallLocation.TrimEnd(" ", "\")
+                $ModsPathClean = $($WAUConfig.WAU_ModsPath.TrimEnd(" ", "\", "/"))
+                Write-Log "WAU uses External Mods from: $ModsPathClean"
+                $NewMods, $DeletedMods = Test-ModsPath $ModsPathClean $WAUConfig.InstallLocation.TrimEnd(" ", "\")
                 if ($ReachNoPath) {
-                    Write-Log "Couldn't reach/find/compare/copy from $($WAUConfig.WAU_ModsPath.TrimEnd(" ", "\", "/"))..." "Red"
+                    Write-Log "Couldn't reach/find/compare/copy from $ModsPathClean..." "Red"
                     $Script:ReachNoPath = $False
                 }
                 if ($NewMods -gt 0) {
@@ -219,94 +215,109 @@ if (Test-Network) {
         Write-Log "Checking application updates on Winget Repository..." "yellow"
         $outdated = Get-WingetOutdatedApps
 
-        #If something is wrong with the winget source, exit
-        if ($outdated -like "Problem:*") {
-            Write-Log "Critical: An error occured, exiting..." "red"
-            Write-Log "$outdated" "red"
-            New-Item "$WorkingDir\logs\error.txt" -Value "$outdated" -Force
-            Exit 1
+        #If something unusual happened
+        if ($outdated -like "An unusual*") {
+            Write-Log "$outdated" "cyan"
+            $outdated = $False
         }
 
-        #Log list of app to update
-        foreach ($app in $outdated) {
-            #List available updates
-            $Log = "-> Available update : $($app.Name). Current version : $($app.Version). Available version : $($app.AvailableVersion)."
-            $Log | Write-host
-            $Log | out-file -filepath $LogFile -Append
-        }
-
-        #Count good update installations
-        $Script:InstallOK = 0
-
-        #Trick under user context when -BypassListForUsers is used
-        if ($IsSystem -eq $false -and $WAUConfig.WAU_BypassListForUsers -eq $true) {
-            Write-Log "Bypass system list in user context is Enabled."
-            $UseWhiteList = $false
-            $toSkip = $null
-        }
-
-        #If White List
-        if ($UseWhiteList) {
-            #For each app, notify and update
+        #Run only if $outdated is populated!
+        if ($outdated) {
+            #Log list of app to update
             foreach ($app in $outdated) {
-                if (($toUpdate -contains $app.Id) -and $($app.Version) -ne "Unknown") {
-                    Update-App $app
-                }
-                #if current app version is unknown
-                elseif ($($app.Version) -eq "Unknown") {
-                    Write-Log "$($app.Name) : Skipped upgrade because current version is 'Unknown'" "Gray"
-                }
-                #if app is in "excluded list"
-                else {
-                    Write-Log "$($app.Name) : Skipped upgrade because it is not in the included app list" "Gray"
+                #List available updates
+                $Log = "-> Available update : $($app.Name). Current version : $($app.Version). Available version : $($app.AvailableVersion)."
+                $Log | Write-host
+                $Log | out-file -filepath $LogFile -Append
+            }
+
+            #Count good update installations
+            $Script:InstallOK = 0
+
+            #Trick under user context when -BypassListForUsers is used
+            if ($IsSystem -eq $false -and $WAUConfig.WAU_BypassListForUsers -eq $true) {
+                Write-Log "Bypass system list in user context is Enabled."
+                $UseWhiteList = $false
+                $toSkip = $null
+            }
+
+            #If White List
+            if ($UseWhiteList) {
+                #For each app, notify and update
+                foreach ($app in $outdated) {
+                    if (($toUpdate -contains $app.Id) -and $($app.Version) -ne "Unknown") {
+                        Update-App $app
+                    }
+                    #if current app version is unknown
+                    elseif ($($app.Version) -eq "Unknown") {
+                        Write-Log "$($app.Name) : Skipped upgrade because current version is 'Unknown'" "Gray"
+                    }
+                    #if app is in "excluded list"
+                    else {
+                        Write-Log "$($app.Name) : Skipped upgrade because it is not in the included app list" "Gray"
+                    }
                 }
             }
-        }
-        #If Black List or default
-        else {
-            #For each app, notify and update
-            foreach ($app in $outdated) {
-                if (-not ($toSkip -contains $app.Id) -and $($app.Version) -ne "Unknown") {
-                    Update-App $app
+            #If Black List or default
+            else {
+                #For each app, notify and update
+                foreach ($app in $outdated) {
+                    if (-not ($toSkip -contains $app.Id) -and $($app.Version) -ne "Unknown") {
+                        Update-App $app
+                    }
+                    #if current app version is unknown
+                    elseif ($($app.Version) -eq "Unknown") {
+                        Write-Log "$($app.Name) : Skipped upgrade because current version is 'Unknown'" "Gray"
+                    }
+                    #if app is in "excluded list"
+                    else {
+                        Write-Log "$($app.Name) : Skipped upgrade because it is in the excluded app list" "Gray"
+                    }
                 }
-                #if current app version is unknown
-                elseif ($($app.Version) -eq "Unknown") {
-                    Write-Log "$($app.Name) : Skipped upgrade because current version is 'Unknown'" "Gray"
-                }
-                #if app is in "excluded list"
-                else {
-                    Write-Log "$($app.Name) : Skipped upgrade because it is in the excluded app list" "Gray"
-                }
+            }
+
+            if ($InstallOK -gt 0) {
+                Write-Log "$InstallOK apps updated ! No more update." "Green"
             }
         }
 
-        if ($InstallOK -gt 0) {
-            Write-Log "$InstallOK apps updated ! No more update." "Green"
-        }
-        if ($InstallOK -eq 0) {
+        if ($InstallOK -eq 0 -or !$InstallOK) {
             Write-Log "No new update." "Green"
         }
 
-        #Run WAU in user context if currently as system and the user task exist
-        $UserScheduledTask = Get-ScheduledTask -TaskName "Winget-AutoUpdate-UserContext" -ErrorAction SilentlyContinue
-        if ($IsSystem -and $UserScheduledTask) {
+        #Check if any user is logged on if System and run User task (if installed)
+        if ($IsSystem) {
+            #User check routine from: https://stackoverflow.com/questions/23219718/powershell-script-to-see-currently-logged-in-users-domain-and-machine-status
+            $explorerprocesses = @(Get-WmiObject -Query "Select * FROM Win32_Process WHERE Name='explorer.exe'" -ErrorAction SilentlyContinue)
+            If ($explorerprocesses.Count -eq 0)
+            {
+                Write-Log "No explorer process found / Nobody interactively logged on..."
+            }
+            Else
+            {
+                #Run WAU in user context if the user task exist
+                $UserScheduledTask = Get-ScheduledTask -TaskName "Winget-AutoUpdate-UserContext" -ErrorAction SilentlyContinue
+                if ($UserScheduledTask) {
 
-            #Get Winget system apps to excape them befor running user context
-            Write-Log "Get list of installed Winget apps in System context..."
-            Get-WingetSystemApps
+                    #Get Winget system apps to excape them befor running user context
+                    Write-Log "User logged on, get a list of installed Winget apps in System context..."
+                    Get-WingetSystemApps
 
-            #Run user context scheduled task
-            Write-Log "Starting WAU in User context"
-            Start-ScheduledTask $UserScheduledTask.TaskName -ErrorAction SilentlyContinue
-            Exit 0
-        }
-        elseif (!$UserScheduledTask){
-            Write-Log "User context execution not installed"
+                    #Run user context scheduled task
+                    Write-Log "Starting WAU in User context"
+                    Start-ScheduledTask $UserScheduledTask.TaskName -ErrorAction SilentlyContinue
+                    Exit 0
+                }
+                elseif (!$UserScheduledTask){
+                    Write-Log "User context execution not installed..."
+                }
+            }        
         }
     }
     else {
         Write-Log "Critical: Winget not installed or detected, exiting..." "red"
         New-Item "$WorkingDir\logs\error.txt" -Value "Winget not installed or detected" -Force
+        Write-Log "End of process!" "Cyan"
         Exit 1
     }
 }
