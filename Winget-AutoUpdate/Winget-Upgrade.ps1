@@ -92,9 +92,9 @@ if (Test-Network) {
             else {
                 Write-ToLog "WAU AutoUpdate is Enabled." "Green"
                 #Get Available Version
-                $WAUAvailableVersion = Get-WAUAvailableVersion
+                $Script:WAUAvailableVersion = Get-WAUAvailableVersion
                 #Compare
-                if ([version]$WAUAvailableVersion -gt [version]$WAUCurrentVersion) {
+                if ([version]$WAUAvailableVersion.Replace("-", ".") -ne [version]$WAUCurrentVersion.Replace("-", ".")) {
                     #If new version is available, update it
                     Write-ToLog "WAU Available version: $WAUAvailableVersion" "Yellow"
                     Update-WAU
@@ -152,7 +152,12 @@ if (Test-Network) {
             if ($WAUConfig.WAU_ModsPath) {
                 $ModsPathClean = $($WAUConfig.WAU_ModsPath.TrimEnd(" ", "\", "/"))
                 Write-ToLog "WAU uses External Mods from: $ModsPathClean"
-                $NewMods, $DeletedMods = Test-ModsPath $ModsPathClean $WAUConfig.InstallLocation.TrimEnd(" ", "\") $WAUConfig.WAU_AzureBlobSASURL.TrimEnd(" ")
+                if ($WAUConfig.WAU_AzureBlobSASURL) {
+                    $NewMods, $DeletedMods = Test-ModsPath $ModsPathClean $WAUConfig.InstallLocation.TrimEnd(" ", "\") $WAUConfig.WAU_AzureBlobSASURL.TrimEnd(" ")
+                }
+                else {
+                    $NewMods, $DeletedMods = Test-ModsPath $ModsPathClean $WAUConfig.InstallLocation.TrimEnd(" ", "\")
+                }
                 if ($ReachNoPath) {
                     Write-ToLog "Couldn't reach/find/compare/copy from $ModsPathClean..." "Red"
                     $Script:ReachNoPath = $False

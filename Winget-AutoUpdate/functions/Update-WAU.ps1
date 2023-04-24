@@ -20,30 +20,30 @@ function Update-WAU {
 
         #Download the zip
         Write-ToLog "Downloading the GitHub Repository version $WAUAvailableVersion" "Cyan"
-        Invoke-RestMethod -Uri "https://github.com/Romanitho/Winget-AutoUpdate/archive/refs/tags/v$($WAUAvailableVersion).zip/" -OutFile $ZipFile
+        Invoke-RestMethod -Uri "https://github.com/Romanitho/Winget-AutoUpdate/releases/download/v$($WAUAvailableVersion)/WAU.zip" -OutFile $ZipFile
 
         #Extract Zip File
-        Write-ToLog "Unzipping the WAU GitHub Repository" "Cyan"
+        Write-ToLog "Unzipping the WAU Update package" "Cyan"
         $location = "$WorkingDir\WAU_update"
         Expand-Archive -Path $ZipFile -DestinationPath $location -Force
         Get-ChildItem -Path $location -Recurse | Unblock-File
 
         #Update scritps
-        Write-ToLog "Updating WAU" "Yellow"
-        $TempPath = (Resolve-Path "$location\*\Winget-AutoUpdate\")[0].Path
+        Write-ToLog "Updating WAU..." "Yellow"
+        $TempPath = (Resolve-Path "$location\Winget-AutoUpdate\")[0].Path
         if ($TempPath) {
             Copy-Item -Path "$TempPath\*" -Destination "$WorkingDir\" -Exclude "icons" -Recurse -Force
         }
 
         #Remove update zip file and update temp folder
-        Write-ToLog "Done. Cleaning temp files" "Cyan"
+        Write-ToLog "Done. Cleaning temp files..." "Cyan"
         Remove-Item -Path $ZipFile -Force -ErrorAction SilentlyContinue
         Remove-Item -Path $location -Recurse -Force -ErrorAction SilentlyContinue
 
         #Set new version to registry
         $WAUConfig | New-ItemProperty -Name DisplayVersion -Value $WAUAvailableVersion -Force
-        $WAUConfig | New-ItemProperty -Name VersionMajor -Value ([version]$WAUAvailableVersion).Major -Force
-        $WAUConfig | New-ItemProperty -Name VersionMinor -Value ([version]$WAUAvailableVersion).Minor -Force
+        $WAUConfig | New-ItemProperty -Name VersionMajor -Value ([version]$WAUAvailableVersion.Replace("-", ".")).Major -Force
+        $WAUConfig | New-ItemProperty -Name VersionMinor -Value ([version]$WAUAvailableVersion.Replace("-", ".")).Minor -Force
 
         #Set Post Update actions to 1
         $WAUConfig | New-ItemProperty -Name WAU_PostUpdateActions -Value 1 -Force

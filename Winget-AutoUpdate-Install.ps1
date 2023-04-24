@@ -115,9 +115,6 @@ param(
     [Parameter(Mandatory = $False)] [int64] $MaxLogSize = 1048576 # in bytes, default is 1048576 = 1 MB
 )
 
-<# APP INFO #>
-
-$WAUVersion = "1.17.2"
 
 <# FUNCTIONS #>
 
@@ -343,8 +340,6 @@ function Install-WingetAutoUpdate {
         New-ItemProperty $regPath -Name QuietUninstallString -Value "powershell.exe -noprofile -executionpolicy bypass -file `"$WingetUpdatePath\WAU-Uninstall.ps1`"" -Force | Out-Null
         New-ItemProperty $regPath -Name NoModify -Value 1 -Force | Out-Null
         New-ItemProperty $regPath -Name NoRepair -Value 1 -Force | Out-Null
-        New-ItemProperty $regPath -Name VersionMajor -Value ([version]$WAUVersion).Major -Force | Out-Null
-        New-ItemProperty $regPath -Name VersionMinor -Value ([version]$WAUVersion).Minor -Force | Out-Null
         New-ItemProperty $regPath -Name Publisher -Value "Romanitho" -Force | Out-Null
         New-ItemProperty $regPath -Name URLInfoAbout -Value "https://github.com/Romanitho/Winget-AutoUpdate" -Force | Out-Null
         New-ItemProperty $regPath -Name WAU_NotificationLevel -Value $NotificationLevel -Force | Out-Null
@@ -515,6 +510,12 @@ function Add-Shortcut ($Target, $Shortcut, $Arguments, $Icon, $Description) {
     $Shortcut.Save()
 }
 
+
+<# APP INFO #>
+
+$WAUVersion = Get-Content "$PSScriptRoot\Winget-AutoUpdate\Version.txt" -ErrorAction SilentlyContinue
+
+
 <# MAIN #>
 
 #If running as a 32-bit process on an x64 system, re-launch as a 64-bit process
@@ -549,5 +550,6 @@ else {
     Uninstall-WingetAutoUpdate
 }
 
+Remove-Item "$WingetUpdatePath\Version.txt" -Force
 Write-host "`nEnd of process." -ForegroundColor Cyan
 Start-Sleep 3

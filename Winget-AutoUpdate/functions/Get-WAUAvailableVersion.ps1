@@ -19,6 +19,7 @@ function Get-WAUAvailableVersion {
 
     }
 
+    #Return version
     return ((Invoke-WebRequest $WAUurl -UseBasicParsing | ConvertFrom-Json)[0].tag_name).Replace("v", "")
 
 }
