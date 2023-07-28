@@ -293,6 +293,7 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
         Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
    }
 
+   # Run WAU in case it is not specified otherwise.
    if ( $configuration.DoNotUpdate -ne 0 ) {
         Start-ScheduledTask -TaskName "Winget-Autoupdate";
         Write-LogFile "Starting Winget Autoupdate after setup $wauWrapperEXE." -Severity 1
