@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<config>
-  <Process>
-    <Filename>powershell.exe</Filename>
-    <WorkingDirectory>[APPDIR]</WorkingDirectory>
-    <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[APPDIR]\winget-upgrade.ps1"</Arguments>
-    <SetExitCode>1</SetExitCode>
-  </Process>
-</config>

@@ -14,6 +14,7 @@ $PolicyListLocation = $PolicyRegistryLocation + "\List"
 $PolicyModLocation = $PolicyRegistryLocation + "\Mods"
 $DataDir = "$env:Programdata\Winget-AutoUpdate-Configurator";
 $scriptlocation = $MyInvocation.MyCommand.Path + "\.."
+$wauWrapperEXE = "$scriptlocation\WinGet-AutoUpdate-Configurator\Winget-AutoUpdate.exe"
 
 Import-Module "$scriptLocation\WinGet-AutoUpdate-Configurator\Generic.psm1"
 
@@ -166,6 +167,14 @@ function Get-CommandLine {
     return $commandLineArguments
 }
 
+function Set-Shortcut ($Target, $Shortcut, $Arguments) {
+    $WScriptShell = New-Object -ComObject WScript.Shell
+    $Shortcut = $WScriptShell.CreateShortcut($Shortcut)
+    $Shortcut.TargetPath = $Target
+    $Shortcut.Arguments = $Arguments
+    $Shortcut.Save()
+}
+
 function Invoke-ModCreation {
     $modsDir = "$DataDir\mods"
     
@@ -258,6 +267,31 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     }
     iex $installCommand;
     Write-LogFile "Updated WAU." -Severity 1
+
+    # Overwrite original Winget Tasks with WAUC Tasks. This is allows configuring WAUC as a managed installer.
+    $RunWingetAutoupdateAction = New-ScheduledTaskAction -Execute $wauWrapperEXE -Argument "[ARGSSELECTOR|winget-upgrade]"
+
+    #$UserRunWingetAutoupdateAction = New-ScheduledTaskAction -Execute "$scriptlocation\WinGet-AutoUpdate-Configurator\Winget-AutoUpdate.exe" -Argument "user-run"
+    $NotifyUserAction = New-ScheduledTaskAction -Execute $wauWrapperEXE -Argument "[ARGSSELECTOR|notify-user]"
+    Set-ScheduledTask -TaskName "Winget-Autoupdate" -Action $RunWingetAutoupdateAction
+    
+    if ( $configuration.InstallUserContext ) {
+        Set-ScheduledTask -TaskName "Winget-AutoUpdate-UserContext" -Action $RunWingetAutoupdateAction -ErrorAction SilentlyContinue
+    }
+    Set-ScheduledTask -TaskName "Winget-AutoUpdate-Notify" -Action $NotifyUserAction -ErrorAction SilentlyContinue
+    Write-LogFile "Set Winget-Autoupdate tasks to run $wauWrapperEXE." -Severity 1
+
+    if ( $configuration.StartMenuShortcut ) {
+        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
+        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Open logs.lnk" -Arguments "[ARGSSELECTOR|user-run] -Logs"
+        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Web Help.lnk" -Arguments "[ARGSSELECTOR|user-run] -Help"
+        Write-LogFile "Modified start menu shortcuts to run $wauWrapperEXE." -Severity 1
+   }
+
+   if ( $configuration.DesktopShortcut ) {
+        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
+        Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
+   }
 } else {
     Write-LogFile "Skipped updating WAU." -Severity 1
 }
