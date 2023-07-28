@@ -6,6 +6,7 @@
     <WorkingDirectory>[APPDIR]</WorkingDirectory>
     <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Winget-AutoUpdate|InstallLocation|C:\ProgramData\Winget-AutoUpdate]\winget-upgrade.ps1"</Arguments>
     <SetExitCode>1</SetExitCode>
+    <WindowStyle>Hidden</WindowStyle>
   </Process>
   <Process>
     <ArgsSelector>user-run</ArgsSelector>
@@ -13,6 +14,7 @@
     <WorkingDirectory>[APPDIR]</WorkingDirectory>
     <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Winget-AutoUpdate|InstallLocation|C:\ProgramData\Winget-AutoUpdate]\user-run.ps1" [RESOLVED_ARGS]</Arguments>
     <SetExitCode>1</SetExitCode>
+    <WindowStyle>Hidden</WindowStyle>
   </Process>
   <Process>
     <ArgsSelector>notify-user</ArgsSelector>
@@ -20,5 +22,6 @@
     <WorkingDirectory>[APPDIR]</WorkingDirectory>
     <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Winget-AutoUpdate|InstallLocation|C:\ProgramData\Winget-AutoUpdate]\winget-notify.ps1"</Arguments>
     <SetExitCode>1</SetExitCode>
+    <WindowStyle>Hidden</WindowStyle>
   </Process>
 </config>
