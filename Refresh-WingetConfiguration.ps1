@@ -281,14 +281,14 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     Set-ScheduledTask -TaskName "Winget-AutoUpdate-Notify" -Action $NotifyUserAction -ErrorAction SilentlyContinue
     Write-LogFile "Set Winget-Autoupdate tasks to run $wauWrapperEXE." -Severity 1
 
-    if ( $configuration.StartMenuShortcut ) {
+    if ( $commandLineArguments -match "-StartMenuShortcut" ) {
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Open logs.lnk" -Arguments "[ARGSSELECTOR|user-run] -Logs"
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Web Help.lnk" -Arguments "[ARGSSELECTOR|user-run] -Help"
         Write-LogFile "Modified start menu shortcuts to run $wauWrapperEXE." -Severity 1
    }
 
-   if ( $configuration.DesktopShortcut ) {
+   if ( $commandLineArguments -match "-DesktopShortcut" ) {
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
    }
