@@ -110,7 +110,7 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -ListPath `"$DataDir\`""
+    $commandLineArguments = "-silent -DoNotUpdate -DisableWAUAutoUpdate -NoClean -ListPath `"$DataDir\`""
 
     if ( $configuration.NotificationLevel ) {
         $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
@@ -156,9 +156,9 @@ function Get-CommandLine {
         $commandLineArguments += " -StartMenuShortcut";
     }
 
-    if ( $configuration.DoNotUpdate -ne 0) {
-        $commandLineArguments += " -DoNotUpdate";
-    }
+#    if ( $configuration.DoNotUpdate -ne 0) {
+#        $commandLineArguments += " -DoNotUpdate";
+#    }
 
     if ( $configuration.InstallUserContext ) {
         $commandLineArguments += " -InstallUserContext";
@@ -291,6 +291,11 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
    if ( $commandLineArguments -match "-DesktopShortcut" ) {
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
+   }
+
+   if ( $configuration.DoNotUpdate -ne 0 ) {
+        Start-ScheduledTask -TaskName "Winget-Autoupdate";
+        Write-LogFile "Starting Winget Autoupdate after setup $wauWrapperEXE." -Severity 1
    }
 } else {
     Write-LogFile "Skipped updating WAU." -Severity 1
