@@ -243,7 +243,7 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
         $commandLineArguments = Get-CommandLine -configuration $configuration;
         Write-LogFile -InputObject "The client MDM or domain joined. Therefore the default enterprise configuration is enabled." -Severity 1
      } else {
-        $commandLineArguments = "-silent -DisableWAUAutoUpdate -NoClean -StartMenuShortcut"
+        $commandLineArguments = "-silent -DoNotUpdate -DisableWAUAutoUpdate -NoClean -StartMenuShortcut"
         Write-LogFile -InputObject "The client is not domain joined or MDM enrolled. Therefore the default enduser configuration is enabled." -Severity 1
      }
 
