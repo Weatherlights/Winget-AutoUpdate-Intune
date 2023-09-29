@@ -1,7 +1,10 @@
-# Winget-AutoUpdate-Configurator
-WinGet-AutoUpdate-Configurator is based on WinGet-AutoUpdate (WAU) and allows you to configure Winget-AutoUpdate within the Microsoft Intune console using ADMX backed policies.
+# Winget-AutoUpdate-aaS
+WinGet-AutoUpdate-aaS is based on WinGet-AutoUpdate (WAU) and is dedicated to the approach to bring you WAU in the form of a service (aaS). So this means:
+* No packaging and automatic servicing through the Microsoft Store
+* Configurable and ready to use modifications that do not require scripting
+* No infrastructure deployment: Everything can be reached right out of Intune
 
-The WinGet-AutoUpdate-Configurator takes the configuration from Microsoft Intune and applies it to WinGet-AutoUpdate so your users stay up-to-date with their software.
+WinGet-AutoUpdate-aaS takes the configuration from Microsoft Intune and applies it to WinGet-AutoUpdate so your users stay up-to-date with their software.
 
 ![image](https://user-images.githubusercontent.com/96626929/150645599-9460def4-0818-4fe9-819c-dd7081ff8447.png)
 
@@ -22,6 +25,6 @@ You can also configure your white- and blacklist from within the Microsoft Intun
 ## Where to start from here
 Take a look into the [Wiki](https://github.com/Weatherlights/Winget-AutoUpdate-Intune/wiki)... I just wrote some stuff together that helps you getting started.
 
-WinGet-Autoupdate-Configurator is also available from the Microsoft Store and can be deployed using the Microsoft Store App (new) mechanism:
+WinGet-Autoupdate-aaS is also available from the Microsoft Store and can be deployed using the Microsoft Store App (new) mechanism:
 
 <a href="https://apps.microsoft.com/store/detail/wingetautoupdateconfigurator/XP89BSK82W9J28"><img src="https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width="280"/></a>
