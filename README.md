@@ -1,5 +1,5 @@
 # Winget-AutoUpdate-aaS
-WinGet-AutoUpdate-aaS is based on WinGet-AutoUpdate (WAU) and is dedicated to the approach to bring you WAU in the form of a service (aaS). So this means:
+WinGet-AutoUpdate-aaS (formerly Winget-AutoUpdate-Configurator) is based on WinGet-AutoUpdate (WAU) and is dedicated to the approach to bring you WAU in the form of a service (aaS). So this means:
 * No packaging and automatic servicing through the Microsoft Store
 * Configurable and ready to use modifications that do not require scripting
 * No infrastructure deployment: Everything can be reached right out of Intune
