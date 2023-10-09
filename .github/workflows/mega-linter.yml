@@ -54,6 +54,7 @@ jobs:
           POWERSHELL_POWERSHELL_CONFIG_FILE: .github/.powershell-psscriptanalyzer.psd1
           DISABLE_ERRORS_LINTERS: REPOSITORY_DEVSKIM,REPOSITORY_CHECKOV,REPOSITORY_GIT_DIFF,SPELL_CSPELL,SPELL_PROSELINT,COPYPASTE_JSCPD,MARKDOWN_MARKDOWN_LINK_CHECK
           FILTER_REGEX_EXCLUDE: (workflows/)
+          REPOSITORY_TRUFFLEHOG_DISABLE_ERRORS_IF_LESS_THAN: 2
 
       # Upload MegaLinter artifacts
       - name: Archive production artifacts
@@ -88,7 +89,7 @@ jobs:
         run: sudo chown -Rc $UID .git/
       - name: Commit and push applied linter fixes
         if: steps.ml.outputs.has_updated_sources == 1 && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'commit' && github.ref != 'refs/heads/main' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && !contains(github.event.head_commit.message, 'skip fix')
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
           commit_message: "[MegaLinter] Apply linters fixes"
