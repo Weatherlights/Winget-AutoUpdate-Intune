@@ -110,7 +110,7 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "-silent -DoNotUpdate -DisableWAUAutoUpdate -NoClean -ListPath `"$DataDir\`""
+    $commandLineArguments = "-silent -DoNotUpdate -DisableWAUAutoUpdate -NoClean"
 
     if ( $configuration.NotificationLevel ) {
         $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
@@ -216,7 +216,9 @@ if ( !(Test-Path -Path $DataDir) ) {
 
 
 if ( Test-Path -Path $PolicyRegistryLocation ) {
-    $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;   
+    $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;
+    $commandLineArguments = Get-CommandLine -configuration $configuration;
+       
     Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation" -Severity 1; 
     if ( Test-Path -Path $PolicyListLocation ) {
         $list = Get-ItemProperty -Path $PolicyListLocation
@@ -229,14 +231,17 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
 
         Write-ListConfigToFile -FilePath $ListLocation -List $list;
 
+        $commandLineArguments += " -ListPath `"$DataDir\`"" # Append path to the list file.
+
         Write-LogFile -InputObject "Parsed list to $ListLocation." -Severity 1
     } else {
         Write-LogFile -InputObject "No List provided." -Severity 1
     }
 
+    
     Invoke-ModCreation;
     
-    $commandLineArguments = Get-CommandLine -configuration $configuration;
+    
 } else {
      Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet." -Severity 2
      if ( Get-MDMEnrollmentStatus -or Get-DomainJoinStatus ) {
@@ -268,6 +273,7 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     iex $installCommand;
     Write-LogFile "Updated WAU." -Severity 1
 
+    if ( 0 ) { # This code is not ready yet.
     # Overwrite original Winget Tasks with WAUC Tasks. This is allows configuring WAUC as a managed installer.
     $RunWingetAutoupdateAction = New-ScheduledTaskAction -Execute $wauWrapperEXE -Argument "[ARGSSELECTOR|winget-upgrade]"
 
@@ -291,6 +297,7 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
    if ( $commandLineArguments -match "-DesktopShortcut" ) {
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
+   }
    }
 
    # Run WAU in case it is not specified otherwise.
