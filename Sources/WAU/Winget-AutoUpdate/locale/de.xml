@@ -1,0 +1,62 @@
+<local>
+	<outputs>
+		<output id="0">
+			<!--Check network connection-->
+			<title>Prüfen Sie Ihre Internet Verbindung.</title>
+			<!--Unable to check for software updates at this time!-->
+			<message>Es konnte nicht nach Updates gesucht werden!</message>
+		</output>
+		<output id="1">
+			<!--No internet connction-->
+			<title>Keine Internet Verbindung!</title>
+			<!--Updates could not be verified-->
+			<message>Updates konnten nicht verifiziert werden.</message>
+		</output>
+		<output id="2">
+			<!--{App} will be updated-->
+			<title>{0} wird aktualisiert!</title>
+			<!--{v1.0} to {v2.0}-->
+			<message>Von {0} auf {1}</message>
+		</output>
+		<output id="3">
+			<!--{App} updated-->
+			<title>{0} wurde aktualisiert.</title>
+			<!--Installed version: {v1.0}-->
+			<message>Installierte Version: {0}</message>
+		</output>
+		<output id="4">
+			<!--{App} could not be updated-->
+			<title>{0} konnte nicht aktualisiert werden!</title>
+			<!--Please contact support-->
+			<message>Bitte wenden sie sich an den Support.</message>
+		</output>
+		<output id="5">
+			<!--Logs are not available yet-->
+			<message>Die Logs sind aktuell nicht verfügbar!</message>
+		</output>
+		<output id="6">
+			<!--Starting a manual check for updated apps-->
+			<message>Starte die manuelle Suche nach Updates.</message>
+		</output>
+		<output id="7">
+			<!--Couldn't start a manual check for updated apps-->
+			<message>Die manuelle Suche nach Updates konnte nicht gestartet werden!</message>
+		</output>
+		<output id="8">
+			<!--Check for updated apps already running-->
+			<message>Die Suche nach Updates läuft bereits.</message>
+		</output>
+		<output id="9">
+			<!--Manual check for updated apps completed-->
+			<message>Die manuelle Suche nach Updates wurde abgeschlossen.</message>
+		</output>
+		<output id="10">
+			<!--See changelog-->
+			<message>Changelog prüfen</message>
+		</output>
+		<output id="11">
+			<!--Open log file-->
+			<message>Öffne Logfile</message>
+		</output>
+	</outputs>
+</local>
