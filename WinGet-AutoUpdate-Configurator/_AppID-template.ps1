@@ -59,6 +59,34 @@ if ( $Configuration ) {
         Wait-ModsProc $Wait;
     }
 
+    if ( $Configuration."StopModsSvc" ) {
+        $Svc = @();
+        ForEach ( $StopModsSvcItem in $Configuration."StopModsSvc" ) {
+            $servicesToStop = $StopModsSvcItem.Service;
+            $Svc += $servicesToStop
+        }
+        Stop-ModsSvc $Svc;
+    }
+
+    if ( $Configuration."InstallWingetID" ) {
+        $WingetIDInst = @();
+        ForEach ( $item in $Configuration."InstallWingetID" ) {
+            $wingetid = $item.wingetid;
+            $WingetIDInst += $wingetid
+        }
+        Install-WingetID $WingetIDInst;
+    }
+
+    if ( $Configuration."UninstallWingetID" ) {
+        $WingetIDUninst = @();
+        ForEach ( $item in $Configuration."UninstallWingetID" ) {
+            $wingetid = $item.wingetid;
+            $WingetIDUninst += $wingetid
+        }
+        Uninstall-WingetID $WingetIDUninst;
+    }
+
+
     if ( $Configuration."UninstallModsApp" ) {
         $App = @();
         ForEach ( $appToRemove in $Configuration."UninstallModsApp" ) {
@@ -75,6 +103,85 @@ if ( $Configuration ) {
             $Lnk += $shortcutPath
         }
         Remove-ModsLnk $Lnk;
+    }
+
+    if ( $Configuration."AddModsReg" ) {
+        ForEach ( $AddModsReg in $Configuration."AddModsReg" ) {
+            $AddKey = $AddModsReg.AddKey;
+            $AddValue = $AddModsReg.AddValue;
+            $AddTypeData = $AddModsReg.AddTypeData;
+            $AddType = $AddModsReg.AddType;
+        
+            Add-ModsReg $AddKey $AddValue $AddTypeData $AddType
+        }
+    }
+
+    if ( $Configuration."RemoveModsReg" ) {
+        ForEach ( $RemoveModsReg in $Configuration."RemoveModsReg" ) {
+            $DelKey = $RemoveModsReg.DelKey;
+            $DelValue = $RemoveModsReg.DelValue;
+        
+            Remove-ModsReg $DelKey $DelValue;
+        }
+    }
+
+    if ( $Configuration."InvokeModsApp" ) {
+        ForEach ( $InvokeModsApp in $Configuration."RemoveModsReg" ) {
+            $Run = $InvokeModsApp.Run;
+            $RunSwitch = $InvokeModsApp.RunSwitch;
+            $RunWait = $InvokeModsApp.RunWait;
+            $User = $InvokeModsApp.User;
+        
+            Invoke-ModsApp $Run $RunSwitch $RunWait $User;
+        }
+    }
+
+    if ( $Configuration."RemoveModsFile" ) {
+        $DelFile = @();
+        ForEach ( $RemoveModsFile in $Configuration."RemoveModsFile" ) {
+            $fileToBeRemoved = $RemoveModsFile.File;
+            $DelFile += $fileToBeRemoved;
+        }
+     
+        Remove-ModsReg $DelFile;  
+    }
+
+    if ( $Configuration."RenameModsFile" ) {
+        ForEach ( $RenameModsFile in $Configuration."RenameModsFile" ) {
+            $RenFile = $RenameModsFile.RenFile;
+            $NewName = $RenameModsFile.NewName;
+        
+            Rename-ModsFile $RenFile $NewName;
+        }
+    }
+
+    if ( $Configuration."CopyModsFile" ) {
+        ForEach ( $CopyModsFile in $Configuration."CopyModsFile" ) {
+            $CopyFile = $CopyModsFile.CopyFile;
+            $CopyTo = $CopyModsFile.CopyTo;
+        
+            Copy-ModsFile $CopyFile $CopyFile;
+        }
+    }
+
+    if ( $Configuration."EditModsFile" ) {
+        ForEach ( $EditModsFile in $Configuration."EditModsFile" ) {
+            $File = $EditModsFile.File;
+            $FindText = $EditModsFile.FindText;
+            $ReplaceText = $EditModsFile.ReplaceText;
+        
+            Edit-ModsFile $File $FindText $ReplaceText;
+        }
+    }
+
+    if ( $Configuration."GrantModsPath" ) {
+        $GrantPath = @();
+        ForEach ( $GrantModsPathItem in $Configuration."GrantModsPath" ) {
+            $grant = $GrantModsPathItem.File;
+            $GrantPath += $grant;
+        }
+     
+        Grant-ModsPath $GrantPath;  
     }
 }
 <# EXTRAS #>
