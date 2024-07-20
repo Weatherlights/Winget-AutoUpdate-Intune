@@ -262,8 +262,8 @@ if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
 }
 Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments." -Severity 1
 
-$installCommand  = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
-$uninstallCommand = "& `"$scriptlocation\Winget-AutoUpdate-Install.ps1`" -Uninstall"
+$installCommand  = "& `"$scriptlocation\Sources\WAU\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
+$uninstallCommand = "& `"$scriptlocation\Sources\WAU\Winget-AutoUpdate-Install.ps1`" -Uninstall"
 
 if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     if ( $configuration.ReinstallOnRefresh ) {
