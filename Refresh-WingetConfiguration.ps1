@@ -293,12 +293,12 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
 
     #$UserRunWingetAutoupdateAction = New-ScheduledTaskAction -Execute "$scriptlocation\WinGet-AutoUpdate-Configurator\Winget-AutoUpdate.exe" -Argument "user-run"
     $NotifyUserAction = New-ScheduledTaskAction -Execute $wauWrapperEXE -Argument "[ARGSSELECTOR|notify-user]"
-    Set-ScheduledTask -TaskName "Winget-Autoupdate" -Action $RunWingetAutoupdateAction
+    Set-ScheduledTask -TaskName "WAU\Winget-Autoupdate" -Action $RunWingetAutoupdateAction
     
     if ( $configuration.InstallUserContext ) {
-        Set-ScheduledTask -TaskName "Winget-AutoUpdate-UserContext" -Action $RunWingetAutoupdateAction -ErrorAction SilentlyContinue
+        Set-ScheduledTask -TaskName "WAU\Winget-AutoUpdate-UserContext" -Action $RunWingetAutoupdateAction -ErrorAction SilentlyContinue
     }
-    Set-ScheduledTask -TaskName "Winget-AutoUpdate-Notify" -Action $NotifyUserAction -ErrorAction SilentlyContinue
+    Set-ScheduledTask -TaskName "WAU\Winget-AutoUpdate-Notify" -Action $NotifyUserAction -ErrorAction SilentlyContinue
     Write-LogFile "Set Winget-Autoupdate tasks to run $wauWrapperEXE." -Severity 1
 
     if ( $commandLineArguments -match "-StartMenuShortcut" ) {
