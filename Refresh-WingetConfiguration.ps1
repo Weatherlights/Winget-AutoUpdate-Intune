@@ -14,11 +14,22 @@ $PolicyListLocation = $PolicyRegistryLocation + "\List"
 $PolicyModLocation = $PolicyRegistryLocation + "\Mods"
 $DataDir = "$env:Programdata\Winget-AutoUpdate-Configurator";
 $scriptlocation = $MyInvocation.MyCommand.Path + "\.."
-$wauWrapperEXE = "$scriptlocation\WinGet-AutoUpdate-Configurator\Winget-AutoUpdate.exe"
 
 Import-Module "$scriptLocation\WinGet-AutoUpdate-Configurator\Generic.psm1"
 
 <# FUNCTIONS #>
+
+function Get-WAUWrapperEXE {
+    $arch = (Get-WMIObject -Class Win32_Processor).Architecture;
+
+    $wauWrapperEXE = "$scriptlocation\WinGet-AutoUpdate-Configurator\Winget-AutoUpdate-x86.exe"
+    if ( $arch -eq 9 ) {
+        $wauWrapperEXE = "$scriptlocation\WinGet-AutoUpdate-Configurator\Winget-AutoUpdate-x64.exe"
+    } elseif ( $arch -eq 12 ) {
+        $wauWrapperEXE = "$scriptlocation\WinGet-AutoUpdate-Configurator\Winget-AutoUpdate-arm64.exe"
+    }
+    return $wauWrapperEXE;
+}
 
 function Write-ListConfigToFile {
     param(
@@ -273,7 +284,10 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     iex $installCommand;
     Write-LogFile "Updated WAU." -Severity 1
 
-    if ( 0 ) { # This code is not ready yet.
+    if ( 1 ) { # This code is not ready yet.
+    $wauWrapperEXE = Get-WAUWrapperEXE;
+    Write-LogFile -InputObject "Retrived wrapper exe $wauWrapperEXE." -Severity 1
+
     # Overwrite original Winget Tasks with WAUC Tasks. This is allows configuring WAUC as a managed installer.
     $RunWingetAutoupdateAction = New-ScheduledTaskAction -Execute $wauWrapperEXE -Argument "[ARGSSELECTOR|winget-upgrade]"
 
