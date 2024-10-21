@@ -99,7 +99,7 @@ function Write-ListConfigToFile {
 
     ForEach ( $item in $list )
     {
-        $parsedList += $item.Value + "`n"
+        $parsedList += $item + "`n"
     }
 
     Out-File -FilePath $FilePath -InputObject $parsedList
