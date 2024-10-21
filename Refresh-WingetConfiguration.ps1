@@ -289,6 +289,13 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
     $commandLineArguments = Get-CommandLine -configuration $configuration;
     $commandLineArguments += " -ListPath `"$DataDir\`"" # Append path to the list file.
 
+    if ( Test-Path "$DataDir\excluded_apps.txt" ) {
+        Remove-Item -Path "$DataDir\excluded_apps.txt" -Force;
+    }
+    if ( Test-Path "$DataDir\included_apps.txt" ) {
+        Remove-Item -Path "$DataDir\included_apps.txt";
+    }
+
     Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation" -Severity 1; 
     if ( Test-Path -Path $PolicyListLocation ) {
         $list = Get-ItemProperty -Path $PolicyListLocation;
