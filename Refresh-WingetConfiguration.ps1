@@ -305,11 +305,9 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
 
         Write-ListConfigToFile -FilePath $ListLocation -List $list;
 
-        
-
         Write-LogFile -InputObject "Parsed list to $ListLocation." -Severity 1
     } else {
-        Write-LogFile -InputObject "No List provided." -Severity 1
+        Write-LogFile -InputObject "No List provided. Will provide standard apps to remove." -Severity 1
         $ListLocation = "$DataDir\excluded_apps.txt";
 
         Write-ListConfigToFile -FilePath $ListLocation -List $forbiddenApps;
