@@ -287,7 +287,8 @@ if ( !(Test-Path -Path $DataDir) ) {
 if ( Test-Path -Path $PolicyRegistryLocation ) {
     $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;
     $commandLineArguments = Get-CommandLine -configuration $configuration;
-       
+    $commandLineArguments += " -ListPath `"$DataDir\`"" # Append path to the list file.
+
     Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation" -Severity 1; 
     if ( Test-Path -Path $PolicyListLocation ) {
         $list = Get-ItemProperty -Path $PolicyListLocation;
@@ -304,7 +305,7 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
 
         Write-ListConfigToFile -FilePath $ListLocation -List $list;
 
-        $commandLineArguments += " -ListPath `"$DataDir\`"" # Append path to the list file.
+        
 
         Write-LogFile -InputObject "Parsed list to $ListLocation." -Severity 1
     } else {
