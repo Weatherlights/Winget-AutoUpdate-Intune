@@ -9,6 +9,19 @@ https://github.com/Weatherlights/Winget-AutoUpdate-Intune
 #>
 
 
+$forbiddenApps = @(
+"Microsoft.Edge",
+"Microsoft.EdgeWebView2Runtime",
+"Microsoft.Office",
+"Microsoft.OneDrive",
+"Microsoft.Teams",
+"Microsoft.Teams.Classic",
+"Mozilla.Firefox*",
+"TeamViewer.TeamViewer*",
+"Microsoft.RemoteDesktopClient",
+"Romanitho.Winget-AutoUpdate"
+);
+
 $PolicyRegistryLocation = "HKLM:\SOFTWARE\Policies\weatherlights.com\Winget-AutoUpdate";
 $PolicyListLocation = $PolicyRegistryLocation + "\List"
 $PolicyModLocation = $PolicyRegistryLocation + "\Mods"
@@ -31,6 +44,51 @@ function Get-WAUWrapperEXE {
     return $wauWrapperEXE;
 }
 
+function Get-ListToArray {
+    param(
+        $List
+    )
+
+    $parsedList = @();
+
+    ForEach ( $item in $list.PSObject.Properties | where { $_.Name -match "[0-9]+" } )
+    {
+        $parsedList += $item.Value
+    }
+
+    return $parsedList;
+}
+
+function Add-EntriesToList {
+    param(
+        $list,
+        $EntriesToAdd
+    )
+
+    ForEach ( $entry in $EntriesToAdd ) {
+        if ( !$list.Contains($entry) ) {
+            $list += $entry;
+        }
+
+    }
+    return $list
+}
+
+function Remove-EntriesFromList {
+    param(
+        $list,
+        $EntriesToRemove
+    )
+
+    ForEach ( $entry in $EntriesToRemove ) {
+        if ( $list.Contains($entry) ) {
+            $list = $list | Where-Object { $_ -ne $entry }
+        }
+
+    }
+    return $list
+}
+
 function Write-ListConfigToFile {
     param(
         $FilePath,
@@ -39,7 +97,7 @@ function Write-ListConfigToFile {
 
     $parsedList = "";
 
-    ForEach ( $item in $list.PSObject.Properties | where { $_.Name -match "[0-9]+" } )
+    ForEach ( $item in $list )
     {
         $parsedList += $item.Value + "`n"
     }
@@ -232,11 +290,15 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
        
     Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation" -Severity 1; 
     if ( Test-Path -Path $PolicyListLocation ) {
-        $list = Get-ItemProperty -Path $PolicyListLocation
+        $list = Get-ItemProperty -Path $PolicyListLocation;
+        $list = Get-ListToArray -List $list;
 
         $listFileName = "excluded_apps.txt"
         if ( $configuration.UseWhiteList ) {
             $listFileName = "included_apps.txt";
+            $list = Remove-EntriesFromList -list $list -EntriesToRemove $forbiddenApps
+        } else {
+            $list = Add-EntriesToList -list $list -EntriesToAdd $forbiddenApps
         }
         $ListLocation = "$DataDir\$listFileName";
 
@@ -247,6 +309,9 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
         Write-LogFile -InputObject "Parsed list to $ListLocation." -Severity 1
     } else {
         Write-LogFile -InputObject "No List provided." -Severity 1
+        $ListLocation = "$DataDir\excluded_apps.txt";
+
+        Write-ListConfigToFile -FilePath $ListLocation -List $forbiddenApps;
     }
 
     
