@@ -41,7 +41,7 @@ function Get-ListToArray {
         $List
     )
 
-    $parsedList = @();
+    [string[]]$parsedList = @();
 
     ForEach ( $item in $list.PSObject.Properties | where { $_.Name -match "[0-9]+" } )
     {
@@ -290,8 +290,8 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
 
     Write-LogFile -InputObject "Configuration received from $PolicyRegistryLocation" -Severity 1; 
     if ( Test-Path -Path $PolicyListLocation ) {
-        $list = Get-ItemProperty -Path $PolicyListLocation;
-        $list = Get-ListToArray -List $list;
+        $registrylist = Get-ItemProperty -Path $PolicyListLocation;
+        [string[]]$list = Get-ListToArray -List $registrylist;
 
         $listFileName = "excluded_apps.txt"
         if ( $configuration.UseWhiteList ) {
