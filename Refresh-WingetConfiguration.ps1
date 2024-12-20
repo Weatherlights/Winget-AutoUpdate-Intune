@@ -347,7 +347,6 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     iex $installCommand;
     Write-LogFile "Updated WAU." -Severity 1
 
-    if ( 1 ) { # This code is not ready yet.
     $wauWrapperEXE = Get-WAUWrapperEXE;
     Write-LogFile -InputObject "Retrived wrapper exe $wauWrapperEXE." -Severity 1
 
@@ -375,6 +374,11 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
    }
+
+   if ( $configuration."PinWAUInstallation" -eq 1 ) {
+& winget pin add --id Romanitho.Winget-AutoUpdate | Out-Null;
+   } elseif ( $configuration."PinWAUInstallation" -eq 0 ) {
+& winget pin remove --id Romanitho.Winget-AutoUpdate | Out-Null;
    }
 
    # Run WAU in case it is not specified otherwise.
