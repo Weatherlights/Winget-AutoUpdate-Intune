@@ -126,7 +126,7 @@ if ( $Configuration ) {
     }
 
     if ( $Configuration."InvokeModsApp" ) {
-        ForEach ( $InvokeModsApp in $Configuration."RemoveModsReg" ) {
+        ForEach ( $InvokeModsApp in $Configuration."InvokeModsApp" ) {
             $Run = $InvokeModsApp.Run;
             $RunSwitch = $InvokeModsApp.RunSwitch;
             $RunWait = $InvokeModsApp.RunWait;
