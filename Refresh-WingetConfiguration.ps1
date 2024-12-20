@@ -10,15 +10,7 @@ https://github.com/Weatherlights/Winget-AutoUpdate-Intune
 
 
 $forbiddenApps = @(
-"Microsoft.Edge",
-"Microsoft.EdgeWebView2Runtime",
-"Microsoft.Office",
-"Microsoft.OneDrive",
-"Microsoft.Teams",
 "Microsoft.Teams.Classic",
-"Mozilla.Firefox*",
-"TeamViewer.TeamViewer*",
-"Microsoft.RemoteDesktopClient",
 "Romanitho.Winget-AutoUpdate"
 );
 
