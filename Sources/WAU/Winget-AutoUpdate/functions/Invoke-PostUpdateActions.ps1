@@ -5,18 +5,6 @@ function Invoke-PostUpdateActions {
     #log
     Write-ToLog "Running Post Update actions:" "yellow"
 
-    # Check if Intune Management Extension Logs folder and WAU-updates.log exists, make symlink
-    if ((Test-Path -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs" -ErrorAction SilentlyContinue) -and !(Test-Path -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-updates.log" -ErrorAction SilentlyContinue)) {
-        Write-ToLog "-> Creating SymLink for log file (WAU-updates) in Intune Management Extension log folder" "yellow"
-        $null = New-Item -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-updates.log" -ItemType SymbolicLink -Value $LogFile -Force -ErrorAction SilentlyContinue
-    }
-
-    # Check if Intune Management Extension Logs folder and WAU-install.log exists, make symlink
-    if ((Test-Path -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs" -ErrorAction SilentlyContinue) -and (Test-Path -Path ('{0}\logs\install.log' -f $WorkingDir) -ErrorAction SilentlyContinue) -and !(Test-Path -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-install.log" -ErrorAction SilentlyContinue)) {
-        Write-ToLog "-> Creating SymLink for log file (WAU-install) in Intune Management Extension log folder" "yellow"
-        $null = (New-Item -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-install.log" -ItemType SymbolicLink -Value ('{0}\logs\install.log' -f $WorkingDir) -Force -Confirm:$False -ErrorAction SilentlyContinue)
-    }
-
     #Update Winget if not up to date
     $null = Update-WinGet
 
@@ -113,7 +101,9 @@ function Invoke-PostUpdateActions {
         "$WorkingDir\functions\Write-Log.ps1",
         "$WorkingDir\functions\Get-WinGetAvailableVersion.ps1",
         "$WorkingDir\functions\Invoke-ModsProtect.ps1",
-        "$WorkingDir\Version.txt"
+        "$WorkingDir\functions\Write-CMTraceLog.ps1",
+        "$WorkingDir\Version.txt",
+        "$WorkingDir\winget_system_apps.txt"
     )
     foreach ($FileName in $FileNames) {
         if (Test-Path $FileName) {
@@ -166,7 +156,7 @@ function Invoke-PostUpdateActions {
 
     #Add 1 to counter file
     try {
-        Invoke-RestMethod -Uri "https://github.com/Romanitho/Winget-AutoUpdate/releases/download/v$($WAUConfig.DisplayVersion)/WAU_InstallCounter" | Out-Null
+        Invoke-RestMethod -Uri "https://github.com/Romanitho/$($GitHub_Repo)/releases/download/v$($WAUConfig.DisplayVersion)/WAU_InstallCounter" | Out-Null
     }
     catch {
         Write-ToLog "-> Not able to report installation." "Yellow"

@@ -11,8 +11,12 @@ Get-ChildItem "$WorkingDir\functions" -File -Filter "*.ps1" -Depth 0 | ForEach-O
 #Config console output encoding
 $null = cmd /c ''
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$Script:ProgressPreference = 'SilentlyContinue'
 
-#Log initialisation
+#Set GitHub Repo
+$Script:GitHub_Repo = "Winget-AutoUpdate"
+
+#Log initialization
 $LogFile = "$WorkingDir\logs\updates.log"
 
 #Check if running account is system or interactive logon
@@ -22,6 +26,21 @@ $Script:SessionID = [System.Diagnostics.Process]::GetCurrentProcess().SessionId
 
 #Check if running as system
 if ($IsSystem) {
+    #If log file doesn't exist, force create it
+    if (!(Test-Path -Path $LogFile)) {
+        Write-ToLog "New log file created"
+    }
+    # Check if Intune Management Extension Logs folder exists
+    if ((Test-Path -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs" -ErrorAction SilentlyContinue)) {
+        # Check if symlink WAU-updates.log exists, make symlink (doesn't work under ServiceUI)
+        if (!(Test-Path -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-updates.log" -ErrorAction SilentlyContinue)) {
+            $symLink = New-Item -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-updates.log" -ItemType SymbolicLink -Value $LogFile -Force -ErrorAction SilentlyContinue
+        }
+        # Check if install.log and symlink WAU-install.log exists, make symlink (doesn't work under ServiceUI)
+        if ((Test-Path -Path ('{0}\logs\install.log' -f $WorkingDir) -ErrorAction SilentlyContinue) -and !(Test-Path -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-install.log" -ErrorAction SilentlyContinue)) {
+            $symLink = (New-Item -Path "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs\WAU-install.log" -ItemType SymbolicLink -Value ('{0}\logs\install.log' -f $WorkingDir) -Force -Confirm:$False -ErrorAction SilentlyContinue)
+        }
+    }
     #Check if running with session ID 0
     if ($SessionID -eq 0) {
         #Check if ServiceUI exists
@@ -30,20 +49,33 @@ if ($IsSystem) {
             #Check if any connected user
             $explorerprocesses = @(Get-CimInstance -Query "SELECT * FROM Win32_Process WHERE Name='explorer.exe'" -ErrorAction SilentlyContinue)
             if ($explorerprocesses.Count -gt 0) {
+                if ($symLink) {
+                    $null = (New-Item "$WorkingDir\logs\symlink.txt" -Value $symLink -Force)
+                }
                 #Rerun WAU in system context with ServiceUI
                 & $WorkingDir\ServiceUI.exe -process:explorer.exe $env:windir\System32\wscript.exe \`"$WorkingDir\Invisible.vbs\`" \`"powershell.exe -NoProfile -ExecutionPolicy Bypass -File \`"\`"$WorkingDir\winget-upgrade.ps1\`"\`"\`"
                 Exit 0
             }
             else {
                 Write-ToLog -LogMsg "CHECK FOR APP UPDATES (System context)" -IsHeader
+                if ($symLink) {
+                    Write-ToLog "SymLink for log file created in Intune Management Extension log folder"
+                }
             }
         }
         else {
             Write-ToLog -LogMsg "CHECK FOR APP UPDATES (System context - No ServiceUI)" -IsHeader
+            if ($symLink) {
+                Write-ToLog "SymLink for log file created in Intune Management Extension log folder"
+            }
         }
     }
     else {
         Write-ToLog -LogMsg "CHECK FOR APP UPDATES (System context - Connected user)" -IsHeader
+        if (Test-Path "$WorkingDir\logs\symlink.txt") {
+            Write-ToLog "SymLink for log file created in Intune Management Extension log folder"
+            Remove-Item "$WorkingDir\logs\symlink.txt" -Force
+        }
     }
 }
 else {
@@ -80,14 +112,14 @@ if ($IsSystem) {
     #LogRotation if System
     $LogRotate = Invoke-LogRotation $LogFile $MaxLogFiles $MaxLogSize
     if ($LogRotate -eq $False) {
-        Write-ToLog "An Exception occured during Log Rotation..."
+        Write-ToLog "An Exception occurred during Log Rotation..."
     }
 
     #Run post update actions if necessary if run as System
     if (!($WAUConfig.WAU_PostUpdateActions -eq 0)) {
         Invoke-PostUpdateActions
     }
-    #Run Scope Machine funtion if run as System
+    #Run Scope Machine function if run as System
     Add-ScopeMachine
 }
 
@@ -121,7 +153,7 @@ if (Test-Network) {
                 #Get Available Version
                 $Script:WAUAvailableVersion = Get-WAUAvailableVersion
                 #Compare
-                if ([version]$WAUAvailableVersion.Replace("-", ".") -ne [version]$WAUCurrentVersion.Replace("-", ".")) {
+                if ([version]$WAUAvailableVersion.replace("-n", "") -gt [version]$WAUCurrentVersion.replace("-n", "")) {
                     #If new version is available, update it
                     Write-ToLog "WAU Available version: $WAUAvailableVersion" "Yellow"
                     Update-WAU
@@ -157,7 +189,13 @@ if (Test-Network) {
                         $Script:ReachNoPath = $False
                     }
                     if ($NewList) {
-                        Write-ToLog "Newer List downloaded/copied to local path: $($WAUConfig.InstallLocation.TrimEnd(" ", "\"))" "Yellow"
+                        if ($AlwaysDownloaded) {
+                            Write-ToLog "List downloaded/copied to local path: $($WAUConfig.InstallLocation.TrimEnd(" ", "\"))" "Yellow"
+                        }
+                        else {
+                            Write-ToLog "Newer List downloaded/copied to local path: $($WAUConfig.InstallLocation.TrimEnd(" ", "\"))" "Yellow"
+                        }
+                        $Script:AlwaysDownloaded = $False
                     }
                     else {
                         if ($WAUConfig.WAU_UseWhiteList -and (Test-Path "$WorkingDir\included_apps.txt")) {
@@ -239,8 +277,7 @@ if (Test-Network) {
         #Fix and count the array if GPO List as ERROR handling!
         if ($GPOList) {
             if ($UseWhiteList) {
-                $WhiteList = $toUpdate.GetUpperBound(0)
-                if ($null -eq $WhiteList) {
+                if (-not $toUpdate) {
                     Write-ToLog "Critical: Whitelist doesn't exist in GPO, exiting..." "Red"
                     New-Item "$WorkingDir\logs\error.txt" -Value "Whitelist doesn't exist in GPO" -Force
                     Exit 1
@@ -248,8 +285,7 @@ if (Test-Network) {
                 foreach ($app in $toUpdate) { Write-ToLog "Include app ${app}" }
             }
             else {
-                $BlackList = $toSkip.GetUpperBound(0)
-                if ($null -eq $BlackList) {
+                if (-not $toSkip) {
                     Write-ToLog "Critical: Blacklist doesn't exist in GPO, exiting..." "Red"
                     New-Item "$WorkingDir\logs\error.txt" -Value "Blacklist doesn't exist in GPO" -Force
                     Exit 1
@@ -262,14 +298,12 @@ if (Test-Network) {
         Write-ToLog "Checking application updates on Winget Repository..." "yellow"
         $outdated = Get-WingetOutdatedApps
 
-        #If something unusual happened
-        if ($outdated -like "An unusual*") {
+        #If something unusual happened or no update found
+        if ($outdated -like "No update found.*") {
             Write-ToLog "$outdated" "cyan"
-            $outdated = $False
         }
-
         #Run only if $outdated is populated!
-        if ($outdated) {
+        else {
             #Log list of app to update
             foreach ($app in $outdated) {
                 #List available updates
@@ -346,13 +380,6 @@ if (Test-Network) {
         #Check if user context is activated during system run
         if ($IsSystem) {
 
-            #Adds SymLink if Intune managed
-            $IntuneLogPath = "${env:ProgramData}\Microsoft\IntuneManagementExtension\Logs"
-            if ((Test-Path "$IntuneLogPath") -and !(Test-Path "$IntuneLogPath\WAU-updates.log")) {
-                Write-ToLog "Creating SymLink for log file (WAU-updates) in Intune Management Extension log folder" "Yellow"
-                New-Item -Path "$IntuneLogPath\WAU-updates.log" -ItemType SymbolicLink -Value $LogFile -Force -ErrorAction SilentlyContinue | Out-Null
-            }
-
             #Run WAU in user context if feature is activated
             if ($WAUConfig.WAU_UserContext -eq 1) {
 
@@ -376,7 +403,7 @@ if (Test-Network) {
                     Write-ToLog "No explorer process found / Nobody interactively logged on..."
                 }
                 Else {
-                    #Get Winget system apps to excape them befor running user context
+                    #Get Winget system apps to escape them before running user context
                     Write-ToLog "User logged on, get a list of installed Winget apps in System context..."
                     Get-WingetSystemApps
 
