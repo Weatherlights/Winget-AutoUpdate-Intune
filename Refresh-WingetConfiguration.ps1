@@ -171,50 +171,63 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "-silent -DoNotUpdate -DisableWAUAutoUpdate -NoClean"
+    $commandLineArguments = "/qn DISABLEWAUAUTOUPDATE=1 -NoClean"
 
     if ( $configuration.NotificationLevel ) {
-        $commandLineArguments += " -NotificationLevel " + $configuration.NotificationLevel;
+        $commandLineArguments += " NOTIFICATIONLEVEL=" + $configuration.NotificationLevel;
+    } else {
+        $commandLineArguments += " NOTIFICATIONLEVEL=None";
     }
 
     if ( $configuration.ModsPath ) {
-        $commandLineArguments += " -ModsPath " + $configuration.ModsPath;
+        $commandLineArguments += " MODSPATH=" + $configuration.ModsPath;
     } else {
-        $commandLineArguments += " -ModsPath `"$DataDir\mods`"";
+        $commandLineArguments += " MODSPATH=`"$DataDir\mods`"";
     }
 
     if ( $configuration.RunOnMetered ) {
-        $commandLineArguments += " -RunOnMetered";
+        $commandLineArguments += " DONOTRUNONMETERED=0";
+    } else {
+        $commandLineArguments += " DONOTRUNONMETERED=1";
     }
 
     if ( $configuration.UseWhiteList ) {
-        $commandLineArguments += " -UseWhiteList";
+        $commandLineArguments += " USEWHITELIST=1";
     }
 
     if ( $configuration.UpdatesInterval ) {
-        $commandLineArguments += " -UpdatesInterval " + $configuration.UpdatesInterval;
+        $commandLineArguments += " UPDATESINTERVAL=" + $configuration.UpdatesInterval;
     } else {
-        $commandLineArguments += " -UpdatesInterval Never";
+        $commandLineArguments += " UPDATESINTERVAL=Never";
     }
 
     if ( $configuration.UpdatesAtTime ) {
-        $commandLineArguments += " -UpdatesAtTime " + $configuration.UpdatesAtTime;
+        $commandLineArguments += " UPDATESATTIME=" + $configuration.UpdatesAtTime;
     }
 
     if ( $configuration.BypassListForUsers ) {
-        $commandLineArguments += " -BypassListForUsers";
+        $commandLineArguments += " BYPASSLISTFORUSERS=1";
+    } else {
+        $commandLineArguments += " BYPASSLISTFORUSERS=0";
     }
 
     if ( $configuration.UpdatesAtLogon ) {
-        $commandLineArguments += " -UpdatesAtLogon";
+        $commandLineArguments += " UPDATESATLOGON=1";
+    } else {
+        $commandLineArguments += " UPDATESATLOGON=0";
     }
 
+
     if ( $configuration.DesktopShortcut ) {
-        $commandLineArguments += " -DesktopShortcut";
+        $commandLineArguments += " DESKTOPSHORTCUT=1";
+    } else {
+        $commandLineArguments += " DESKTOPSHORTCUT=0";
     }
 
     if ( $configuration.StartMenuShortcut ) {
-        $commandLineArguments += " -StartMenuShortcut";
+        $commandLineArguments += " STARTMENUSHORTCUT=1";
+    } else {
+        $commandLineArguments += " STARTMENUSHORTCUT=0";
     }
 
 #    if ( $configuration.DoNotUpdate -ne 0) {
@@ -222,7 +235,9 @@ function Get-CommandLine {
 #    }
 
     if ( $configuration.InstallUserContext ) {
-        $commandLineArguments += " -InstallUserContext";
+        $commandLineArguments += " USERCONTEXT=1";
+    } else {
+        $commandLineArguments += " USERCONTEXT=0";
     }
 
     return $commandLineArguments
@@ -336,8 +351,8 @@ if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
 }
 Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments." -Severity 1
 
-$installCommand  = "& `"$scriptlocation\Sources\WAU\Winget-AutoUpdate-Install.ps1`" $commandLIneArguments"
-$uninstallCommand = "& `"$scriptlocation\Sources\WAU\Winget-AutoUpdate-Install.ps1`" -Uninstall"
+$installCommand  = "& msiexec /i `"$scriptlocation\WAUMSI\WAU.msi`" $commandLIneArguments"
+$uninstallCommand = "& msiexec /x `"$scriptlocation\WAUMSI\WAU.msi`" /qn"
 
 if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     if ( $configuration.ReinstallOnRefresh ) {

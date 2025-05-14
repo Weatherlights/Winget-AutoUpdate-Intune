@@ -1,0 +1,62 @@
+<local>
+	<outputs>
+		<output id="0">
+			<!--Check network connection-->
+			<title>Ellenőrizze a hálózati kapcsolatot.</title>
+			<!--Unable to check for software updates at this time!-->
+			<message>Jelenleg nem lehet szoftverfrissítéseket keresni!</message>
+		</output>
+		<output id="1">
+			<!--No internet connction-->
+			<title>Nincs internet kapcsolat.</title>
+			<!--Updates could not be verified-->
+			<message>A frissítések ellenőrzése nem sikerült.</message>
+		</output>
+		<output id="2">
+			<!--{App} will be updated-->
+			<title>{0} Frissítve lesz!</title>
+			<!--{v1.0} to {v2.0}-->
+			<message>{0} - {1}</message>
+		</output>
+		<output id="3">
+			<!--{App} updated-->
+			<title>{0} frissítve.</title>
+			<!--Installed version: {v1.0}-->
+			<message>Telepített verzió: {0}</message>
+		</output>
+		<output id="4">
+			<!--{App} could not be updated-->
+			<title>{0} nem sikerült frissíteni!</title>
+			<!--Please contact support-->
+			<message>Kérjük, forduljon a támogatáshoz.</message>
+		</output>
+		<output id="5">
+			<!--Logs are not available yet-->
+			<message>A naplók még nem érhetők el!</message>
+		</output>
+		<output id="6">
+			<!--Starting a manual check for updated apps-->
+			<message>A frissített alkalmazások kézi ellenőrzésének indítása...</message>
+		</output>
+		<output id="7">
+			<!--Couldn't start a manual check for updated apps-->
+			<message>Nem sikerült elindítani a frissített alkalmazások kézi ellenőrzését!</message>
+		</output>
+		<output id="8">
+			<!--Check for updated apps already running-->
+			<message>Ellenőrizze, hogy vannak-e már futó frissített alkalmazások...</message>
+		</output>
+		<output id="9">
+			<!--Manual check for updated apps completed-->
+			<message>A frissített alkalmazások kézi ellenőrzése befejeződött...</message>
+		</output>
+		<output id="10">
+			<!--See changelog-->
+			<message>Lásd a változásnaplót</message>
+		</output>
+		<output id="11">
+			<!--Open log file-->
+			<message>Naplófájl megnyitás</message>
+		</output>
+	</outputs>
+</local>

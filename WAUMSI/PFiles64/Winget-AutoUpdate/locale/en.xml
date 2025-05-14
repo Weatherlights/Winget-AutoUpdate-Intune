@@ -1,0 +1,62 @@
+<local>
+	<outputs>
+		<output id="0">
+			<!--Check network connection-->
+			<title>Check network connection.</title>
+			<!--Unable to check for software updates at this time!-->
+			<message>Unable to check for software updates at this time!</message>
+		</output>
+		<output id="1">
+			<!--No internet connection-->
+			<title>No internet connection.</title>
+			<!--Updates could not be verified-->
+			<message>Updates could not be verified.</message>
+		</output>
+		<output id="2">
+			<!--{App} will be updated-->
+			<title>{0} will be updated!</title>
+			<!--{v1.0} to {v2.0}-->
+			<message>{0} to {1}</message>
+		</output>
+		<output id="3">
+			<!--{App} updated-->
+			<title>{0} updated.</title>
+			<!--Installed version: {v1.0}-->
+			<message>Installed version: {0}</message>
+		</output>
+		<output id="4">
+			<!--{App} could not be updated-->
+			<title>{0} could not be updated!</title>
+			<!--Please contact support-->
+			<message>Please contact support.</message>
+		</output>
+		<output id="5">
+			<!--Logs are not available yet-->
+			<message>Logs are not available yet!</message>
+		</output>
+		<output id="6">
+			<!--Starting a manual check for updated apps-->
+			<message>Starting a manual check for updated apps...</message>
+		</output>
+		<output id="7">
+			<!--Couldn't start a manual check for updated apps-->
+			<message>Couldn't start a manual check for updated apps!</message>
+		</output>
+		<output id="8">
+			<!--A check for updated apps already running-->
+			<message>A check for updated apps already running...</message>
+		</output>
+		<output id="9">
+			<!--Manual check for updated apps completed-->
+			<message>Manual check for updated apps completed...</message>
+		</output>
+		<output id="10">
+			<!--See changelog-->
+			<message>See changelog</message>
+		</output>
+		<output id="11">
+			<!--Open log file-->
+			<message>Open log file</message>
+		</output>
+	</outputs>
+</local>
