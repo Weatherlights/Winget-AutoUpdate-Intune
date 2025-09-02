@@ -171,7 +171,7 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "/qn DISABLEWAUAUTOUPDATE=1 -NoClean"
+    $commandLineArguments = "/qn TRANSFORMS=`"$($scriptlocation)\WAUMSI\mst\WAU.mst`" DISABLEWAUAUTOUPDATE=1 -NoClean"
 
     if ( $configuration.NotificationLevel ) {
         $commandLineArguments += " NOTIFICATIONLEVEL=" + $configuration.NotificationLevel;
