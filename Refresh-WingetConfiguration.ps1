@@ -373,7 +373,7 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     $NotifyUserAction = New-ScheduledTaskAction -Execute $wauWrapperEXE -Argument "[ARGSSELECTOR|notify-user]"
     Set-ScheduledTask -TaskName "WAU\Winget-Autoupdate" -Action $RunWingetAutoupdateAction
     
-    if ( $configuration.InstallUserContext ) {
+    if ( Get-ScheduledTask -TaskPath "\WAU\" -TaskName "Winget-AutoUpdate-UserContext" -ErrorAction SilentlyContinue ) {
         Set-ScheduledTask -TaskName "WAU\Winget-AutoUpdate-UserContext" -Action $RunWingetAutoupdateAction -ErrorAction SilentlyContinue
     }
     Set-ScheduledTask -TaskName "WAU\Winget-AutoUpdate-Notify" -Action $NotifyUserAction -ErrorAction SilentlyContinue
