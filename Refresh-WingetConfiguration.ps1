@@ -171,7 +171,7 @@ function Get-CommandLine {
         $configuration
     )
 
-    $commandLineArguments = "/qn TRANSFORMS=`"$($scriptlocation)\WAUMSI\mst\WAU.mst`" DISABLEWAUAUTOUPDATE=1 -NoClean"
+    $commandLineArguments = "/qn TRANSFORMS=`"WAUMSI\WAUaaS.mst`" DISABLEWAUAUTOUPDATE=1"
 
     if ( $configuration.NotificationLevel ) {
         $commandLineArguments += " NOTIFICATIONLEVEL=" + $configuration.NotificationLevel;
@@ -337,7 +337,7 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
         $commandLineArguments = Get-CommandLine -configuration $configuration;
         Write-LogFile -InputObject "The client MDM or domain joined. Therefore the default enterprise configuration is enabled." -Severity 1
      } else {
-        $commandLineArguments = "-silent -DoNotUpdate -DisableWAUAutoUpdate -NoClean -StartMenuShortcut"
+        $commandLineArguments = "/qn TRANSFORMS=`"WAUMSI\WAUaaS.mst`" DISABLEWAUAUTOUPDATE=1"
         Write-LogFile -InputObject "The client is not domain joined or MDM enrolled. Therefore the default enduser configuration is enabled." -Severity 1
      }
 
@@ -351,15 +351,16 @@ if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
 }
 Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments." -Severity 1
 
-$installCommand  = "& msiexec /i `"$scriptlocation\WAUMSI\WAU.msi`" $commandLIneArguments"
-$uninstallCommand = "& msiexec /x `"$scriptlocation\WAUMSI\WAU.msi`" /qn"
+$installCommand  = "/i `"WAUMSI\WAU.msi`" $commandLIneArguments"
+$uninstallCommand = "/x `"WAUMSI\WAU.msi`" /qn"
 
 if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     if ( $configuration.ReinstallOnRefresh ) {
-        iex $uninstallCommand;
+        Start-Process -FilePath "msiexec" -ArgumentList $uninstallCommand -WorkingDirectory $scriptlocation -Wait -NoNewWindow
         Write-LogFile "Removed WAU for Reinstall." -Severity 1
     }
-    iex $installCommand;
+    Start-Process -FilePath "msiexec" -ArgumentList $installCommand -WorkingDirectory $scriptlocation -Wait -NoNewWindow
+  
     Write-LogFile "Updated WAU." -Severity 1
 
     $wauWrapperEXE = Get-WAUWrapperEXE;
