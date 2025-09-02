@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <config>
   <Process>
     <ArgsSelector>winget-upgrade</ArgsSelector>
     <Filename>powershell.exe</Filename>
     <WorkingDirectory>[APPDIR]</WorkingDirectory>
-    <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Winget-AutoUpdate|InstallLocation|C:\ProgramData\Winget-AutoUpdate]\winget-upgrade.ps1"</Arguments>
+    <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Romanitho\Winget-AutoUpdate|InstallLocation|C:\Program Files\Winget-AutoUpdate]\winget-upgrade.ps1"</Arguments>
     <SetExitCode>1</SetExitCode>
     <WindowStyle>Hidden</WindowStyle>
   </Process>
@@ -12,7 +12,7 @@
     <ArgsSelector>user-run</ArgsSelector>
     <Filename>powershell.exe</Filename>
     <WorkingDirectory>[APPDIR]</WorkingDirectory>
-    <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Winget-AutoUpdate|InstallLocation|C:\ProgramData\Winget-AutoUpdate]\user-run.ps1" [RESOLVED_ARGS]</Arguments>
+    <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Romanitho\Winget-AutoUpdate|InstallLocation|C:\Program Files\Winget-AutoUpdate]\user-run.ps1" [RESOLVED_ARGS]</Arguments>
     <SetExitCode>1</SetExitCode>
     <WindowStyle>Hidden</WindowStyle>
   </Process>
@@ -20,7 +20,7 @@
     <ArgsSelector>notify-user</ArgsSelector>
     <Filename>powershell.exe</Filename>
     <WorkingDirectory>[APPDIR]</WorkingDirectory>
-    <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Winget-AutoUpdate|InstallLocation|C:\ProgramData\Winget-AutoUpdate]\winget-notify.ps1"</Arguments>
+    <Arguments>-NoProfile -ExecutionPolicy AllSigned -File "[RETRIVEFROMREGISTRY|HKLM|SOFTWARE\Romanitho\Winget-AutoUpdate|InstallLocation|C:\Program Files\Winget-AutoUpdate]\WAU-Notify.ps1"</Arguments>
     <SetExitCode>1</SetExitCode>
     <WindowStyle>Hidden</WindowStyle>
   </Process>
