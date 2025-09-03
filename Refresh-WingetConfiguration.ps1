@@ -171,7 +171,7 @@ function Invoke-WAURefresh {
     param(
         $configuration
     )
-    $WAUConfigLocation = "HKLM:\Software\Romanitho\Winget-Autoupdate"
+    $WAUConfigLocation = "HKLM:\Software\Romanitho\Winget-AutoUpdate"
 
 
     Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ListPath" -Value  $DataDir;
@@ -237,9 +237,6 @@ function Invoke-WAURefresh {
         Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_StartMenuShortcut" -Value  0;
     }
 
-#    if ( $configuration.DoNotUpdate -ne 0) {
-#        $commandLineArguments += " -DoNotUpdate";
-#    }
 
     if ( $configuration.InstallUserContext ) {
         Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UserContext" -Value  1;
@@ -437,7 +434,7 @@ if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
 Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments." -Severity 1
 
 if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLineArguments ) {
-    Invoke-WAURefresh;
+    Invoke-WAURefresh -configuration $configuration;
 
     if ( $configuration.ReinstallOnRefresh ) {
         & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate" -Uninstall;
