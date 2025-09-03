@@ -466,16 +466,21 @@ if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLi
     Write-LogFile "Set Winget-Autoupdate tasks to run $wauWrapperEXE." -Severity 1
 
     if ( $configuration.StartMenuShortcut ) {
-        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
-        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Open logs.lnk" -Arguments "[ARGSSELECTOR|user-run] -Logs"
-        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Web Help.lnk" -Arguments "[ARGSSELECTOR|user-run] -Help"
-        Write-LogFile "Modified start menu shortcuts to run $wauWrapperEXE." -Severity 1
+        md "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS";
+        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS\Run WAU.lnk" -Arguments "[ARGSSELECTOR|user-run]"
+        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS\Open logs.lnk" -Arguments "[ARGSSELECTOR|user-run] -Logs"
+        Write-LogFile "Created start menu shortcuts to run $wauWrapperEXE." -Severity 1
+   } else {
+     rm "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS" -Recurse -Force;
+     Write-LogFile "Deleted start menu shortcuts." -Severity 1
    }
 
    if ( $configuration.DesktopShortcut ) {
-        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
+        Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\Run WAU.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
-   }
+   } else {
+        rm "${env:Public}\Desktop\Run WAU.lnk"
+   } 
 
    if ( $configuration."PinWAUInstallation" -eq 1 ) {
 & winget pin add --id Romanitho.Winget-AutoUpdate | Out-Null;
