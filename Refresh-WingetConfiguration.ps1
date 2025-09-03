@@ -19,6 +19,7 @@ $PolicyListLocation = $PolicyRegistryLocation + "\List"
 $PolicyModLocation = $PolicyRegistryLocation + "\Mods"
 $DataDir = "$env:Programdata\Winget-AutoUpdate-Configurator";
 $scriptlocation = $MyInvocation.MyCommand.Path + "\.."
+$scriptlocation = (Get-Item $scriptlocation).FullName;
 
 Import-Module "$scriptLocation\WinGet-AutoUpdate-Configurator\Generic.psm1"
 
@@ -166,6 +167,93 @@ function Get-DomainJoinStatus {
     (Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain
 }
 
+function Invoke-WAURefresh {
+    param(
+        $configuration
+    )
+    $WAUConfigLocation = "HKLM:\Software\Romanitho\Winget-Autoupdate"
+    $WAUConfigLocation = "HKLM:\Software\test"
+
+
+    Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ListPath" -Value  $DataDir;
+    Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_DisableAutoUpdate" -Value 1;
+
+    if ( $configuration.NotificationLevel ) {
+         Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_NotificationLevel" -Value $configuration.NotificationLevel;
+    } else {
+         Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_NotificationLevel" -Value "Full";
+    }
+
+    if ( $configuration.ModsPath ) {
+        
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ModsPath" -Value $configuration.ModsPath;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ModsPath" -Value "";
+    }
+
+    if ( $configuration.RunOnMetered ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_DoNotRunOnMetered" -Value  $configuration.RunOnMetered;
+        $commandLineArguments += " DONOTRUNONMETERED=0";
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_DoNotRunOnMetered" -Value  1;
+    }
+
+    if ( $configuration.UseWhiteList ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UseWhiteList" -Value  1;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UseWhiteList" -Value  0;
+    }
+
+    if ( $configuration.UpdatesInterval ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UpdatesInterval" -Value  $configuration.UpdatesInterval;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UpdatesInterval" -Value  "Never";
+    }
+
+    if ( $configuration.UpdatesAtTime ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UpdatesAtTime" -Value  $configuration.UpdatesAtTime;
+    }
+
+    if ( $configuration.BypassListForUsers ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_BypassListForUsers" -Value  1;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_BypassListForUsers" -Value  0;
+    }
+
+    if ( $configuration.UpdatesAtLogon ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UpdatesAtLogon" -Value  1;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UpdatesAtLogon" -Value  0;
+    }
+
+    if ( $configuration.DesktopShortcut ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_DesktopShortcut" -Value  1;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_DesktopShortcut" -Value  0;
+    }
+
+    if ( $configuration.StartMenuShortcut ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_StartMenuShortcut" -Value  1;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_StartMenuShortcut" -Value  0;
+    }
+
+#    if ( $configuration.DoNotUpdate -ne 0) {
+#        $commandLineArguments += " -DoNotUpdate";
+#    }
+
+    if ( $configuration.InstallUserContext ) {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UserContext" -Value  1;
+    } else {
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_UserContext" -Value  0;
+    }
+
+
+
+    return $commandLineArguments
+
+}
+
 function Get-CommandLine {
     param(
         $configuration
@@ -293,8 +381,6 @@ if ( !(Test-Path -Path $DataDir) ) {
 
 if ( Test-Path -Path $PolicyRegistryLocation ) {
     $configuration = Get-ItemProperty -Path $PolicyRegistryLocation;
-    $commandLineArguments = Get-CommandLine -configuration $configuration;
-    $commandLineArguments += " -ListPath `"$DataDir\`"" # Append path to the list file.
 
     if ( Test-Path "$DataDir\excluded_apps.txt" ) {
         Remove-Item -Path "$DataDir\excluded_apps.txt" -Force;
@@ -334,7 +420,7 @@ if ( Test-Path -Path $PolicyRegistryLocation ) {
 } else {
      Write-LogFile -InputObject "Warning: $PolicyRegistryLocation does not exist yet." -Severity 2
      if ( Get-MDMEnrollmentStatus -or Get-DomainJoinStatus ) {
-        $commandLineArguments = Get-CommandLine -configuration $configuration;
+        
         Write-LogFile -InputObject "The client MDM or domain joined. Therefore the default enterprise configuration is enabled." -Severity 1
      } else {
         $commandLineArguments = "/qn TRANSFORMS=`"WAUMSI\WAUaaS.mst`" DISABLEWAUAUTOUPDATE=1"
@@ -351,15 +437,15 @@ if ( Test-Path "$DataDir\LastCommand.txt" -PathType Leaf ) {
 }
 Write-LogFile -InputObject "Previous commandline arguments $previousCommandLineArguments." -Severity 1
 
-$installCommand  = "/i `"WAUMSI\WAU.msi`" $commandLIneArguments"
-$uninstallCommand = "/x `"WAUMSI\WAU.msi`" /qn"
+if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLineArguments ) {
+    Invoke-WAURefresh;
 
-if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     if ( $configuration.ReinstallOnRefresh ) {
-        Start-Process -FilePath "msiexec" -ArgumentList $uninstallCommand -WorkingDirectory $scriptlocation -Wait -NoNewWindow
+        & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate" -Uninstall;
         Write-LogFile "Removed WAU for Reinstall." -Severity 1
     }
-    Start-Process -FilePath "msiexec" -ArgumentList $installCommand -WorkingDirectory $scriptlocation -Wait -NoNewWindow
+    & "$scriptlocation\Winget-Autoupdate"
+    & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate";
   
     Write-LogFile "Updated WAU." -Severity 1
 
@@ -379,14 +465,14 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
     Set-ScheduledTask -TaskName "WAU\Winget-AutoUpdate-Notify" -Action $NotifyUserAction -ErrorAction SilentlyContinue
     Write-LogFile "Set Winget-Autoupdate tasks to run $wauWrapperEXE." -Severity 1
 
-    if ( $commandLineArguments -match "-StartMenuShortcut" ) {
+    if ( $configuration.StartMenuShortcut ) {
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Open logs.lnk" -Arguments "[ARGSSELECTOR|user-run] -Logs"
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-AutoUpdate (WAU)\WAU - Web Help.lnk" -Arguments "[ARGSSELECTOR|user-run] -Help"
         Write-LogFile "Modified start menu shortcuts to run $wauWrapperEXE." -Severity 1
    }
 
-   if ( $commandLineArguments -match "-DesktopShortcut" ) {
+   if ( $configuration.DesktopShortcut ) {
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:Public}\Desktop\WAU - Check for updated Apps.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Write-LogFile "Modified desktop shortcuts to run $wauWrapperEXE." -Severity 1
    }
@@ -407,7 +493,7 @@ if ( $commandLineArguments -ne $previousCommandLineArguments ) {
 }
 
 
-Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject $commandLineArguments;
+Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject ($configuration | ConvertTo-Json -Depth 1 -Compress);
 Write-LogFile -InputObject "Stored commandline arguments." -Severity 1
 
     $winget_autoupdate_logpath = "$env:Programdata\Winget-AutoUpdate\logs\updates.log"
