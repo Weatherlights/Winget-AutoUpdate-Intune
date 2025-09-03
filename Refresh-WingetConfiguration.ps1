@@ -468,7 +468,7 @@ if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLi
     if ( $configuration.StartMenuShortcut ) {
         md "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS";
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS\Run WAU.lnk" -Arguments "[ARGSSELECTOR|user-run]"
-        Set-Shortcut -Target "$scriptlocation\Winget-Autoupdate\logs\update.log" -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS\Open logs.lnk" -Arguments "[ARGSSELECTOR|user-run] -Logs"
+        Set-Shortcut -Target "$scriptlocation\Winget-Autoupdate\logs\update.log" -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS\Open logs.lnk"
         Write-LogFile "Created start menu shortcuts to run $wauWrapperEXE." -Severity 1
    } else {
      rm "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS" -Recurse -Force;
