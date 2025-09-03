@@ -187,7 +187,7 @@ function Invoke-WAURefresh {
         
         Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ModsPath" -Value $configuration.ModsPath;
     } else {
-        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ModsPath" -Value "";
+        Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ModsPath" -Value "$($DataDir)\mods";
     }
 
     if ( $configuration.RunOnMetered ) {
