@@ -496,7 +496,7 @@ if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLi
 Out-File -FilePath "$DataDir\LastCommand.txt" -Force -InputObject ($configuration | ConvertTo-Json -Depth 1 -Compress);
 Write-LogFile -InputObject "Stored commandline arguments." -Severity 1
 
-    $winget_autoupdate_logpath = "$env:Programdata\Winget-AutoUpdate\logs\updates.log"
+    $winget_autoupdate_logpath = "$($scriptlocation)\Winget-AutoUpdate\logs\updates.log"
 
     if ( Test-PAth -path $winget_autoupdate_logpath ) {
         
