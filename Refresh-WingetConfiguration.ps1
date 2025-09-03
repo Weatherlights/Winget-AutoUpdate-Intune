@@ -172,7 +172,6 @@ function Invoke-WAURefresh {
         $configuration
     )
     $WAUConfigLocation = "HKLM:\Software\Romanitho\Winget-Autoupdate"
-    $WAUConfigLocation = "HKLM:\Software\test"
 
 
     Set-ItemProperty -Path $WAUConfigLocation -Name "WAU_ListPath" -Value  $DataDir;
@@ -444,7 +443,7 @@ if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLi
         & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate" -Uninstall;
         Write-LogFile "Removed WAU for Reinstall." -Severity 1
     }
-    & "$scriptlocation\Winget-Autoupdate"
+
     & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate";
   
     Write-LogFile "Updated WAU." -Severity 1
