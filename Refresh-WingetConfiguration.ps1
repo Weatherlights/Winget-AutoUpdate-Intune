@@ -465,14 +465,14 @@ if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLi
     Set-ScheduledTask -TaskName "WAU\Winget-AutoUpdate-Notify" -Action $NotifyUserAction -ErrorAction SilentlyContinue
     Write-LogFile "Set Winget-Autoupdate tasks to run $wauWrapperEXE." -Severity 1
 
-    if ( $configuration.StartMenuShortcut ) {
+    if ( $configuration.StartMenuShortcut -eq 0) {
+        rm "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS" -Recurse -Force;
+        Write-LogFile "Deleted start menu shortcuts." -Severity 1
+   } else {
         md "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS";
         Set-Shortcut -Target $wauWrapperEXE -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS\Run WAU.lnk" -Arguments "[ARGSSELECTOR|user-run]"
         Set-Shortcut -Target "$scriptlocation\Winget-Autoupdate\logs\updates.log" -Shortcut "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS\Open logs.lnk"
         Write-LogFile "Created start menu shortcuts to run $wauWrapperEXE." -Severity 1
-   } else {
-     rm "${env:ProgramData}\Microsoft\Windows\Start Menu\Programs\Winget-Autoupdate-aaS" -Recurse -Force;
-     Write-LogFile "Deleted start menu shortcuts." -Severity 1
    }
 
    if ( $configuration.DesktopShortcut ) {
