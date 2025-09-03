@@ -10,13 +10,8 @@ function Test-Network {
 
     try {
         $NlaRegKey = "HKLM:\SYSTEM\CurrentControlSet\Services\NlaSvc\Parameters\Internet"
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/functions/Test-Network.ps1
-        $ncsiHost = Get-ItemPropertyValue    -Path $NlaRegKey -Name ActiveWebProbeHost
-        $ncsiPath = Get-ItemPropertyValue    -Path $NlaRegKey -Name ActiveWebProbePath
-=======
         $ncsiHost = Get-ItemPropertyValue -Path $NlaRegKey -Name ActiveWebProbeHost
         $ncsiPath = Get-ItemPropertyValue -Path $NlaRegKey -Name ActiveWebProbePath
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/functions/Test-Network.ps1
         $ncsiContent = Get-ItemPropertyValue -Path $NlaRegKey -Name ActiveWebProbeContent
     }
     catch {
@@ -25,11 +20,7 @@ function Test-Network {
         $ncsiContent = "Microsoft Connect Test"
     }
 
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/functions/Test-Network.ps1
-    While ($timeout -lt 1800) {
-=======
     while ($timeout -lt 1800) {
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/functions/Test-Network.ps1
         try {
             $ncsiResponse = Invoke-WebRequest -Uri "http://$($ncsiHost)/$($ncsiPath)" -UseBasicParsing -UserAgent ([Microsoft.PowerShell.Commands.PSUserAgent]::Chrome); # DevSkim: ignore DS137138 Insecure URL
         }

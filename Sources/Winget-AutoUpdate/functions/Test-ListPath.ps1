@@ -54,10 +54,7 @@ function Test-ListPath ($ListPath, $UseWhiteList, $WingetUpdatePath) {
         }
         catch {
             try {
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/functions/Test-ListPath.ps1
-=======
                 $wc.OpenRead("$ExternalList").Close() | Out-Null
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/functions/Test-ListPath.ps1
                 $wc.DownloadFile($ExternalList, $LocalList)
                 $Script:AlwaysDownloaded = $True
                 return $true

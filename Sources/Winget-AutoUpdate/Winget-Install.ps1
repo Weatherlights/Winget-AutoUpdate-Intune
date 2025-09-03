@@ -304,31 +304,10 @@ $Script:IsElevated = $CurrentPrincipal.IsInRole([Security.Principal.WindowsBuilt
 $WAURegKey = "HKLM:\SOFTWARE\Romanitho\Winget-AutoUpdate\"
 $Script:WAUInstallLocation = Get-ItemProperty $WAURegKey -ErrorAction SilentlyContinue | Select-Object -ExpandProperty InstallLocation
 
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/Winget-Install.ps1
-#LogPath initialization
-if (!($LogPath)) {
-    #If LogPath is not set, get WAU log path
-    if ($WAUInstallLocation) {
-        $LogPath = "$WAUInstallLocation\Logs"
-    }
-    else {
-        #Else, set a default one
-        $LogPath = "$env:ProgramData\Winget-AutoUpdate\Logs"
-    }
-}
-
-#Logs initialization
-if (!(Test-Path $LogPath)) {
-    New-Item -ItemType Directory -Force -Path $LogPath | Out-Null
-}
-
-#Log file
-=======
 # Use the Working Dir (even if it is from a symlink)
 $Mods = "$realPath\mods"
 
 #Log file & LogPath initialization
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/Winget-Install.ps1
 if ($IsElevated) {
     if (!($LogPath)) {
         #If LogPath is not set, get WAU log path
@@ -370,10 +349,7 @@ if ($IsElevated -eq $True) {
 
     #Reload Winget command
     $Script:Winget = Get-WingetCmd
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/Winget-Install.ps1
-=======
 
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/Winget-Install.ps1
     #Run Scope Machine function
     Add-ScopeMachine
 }

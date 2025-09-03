@@ -1,7 +1,4 @@
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/config/default_excluded_apps.txt
-=======
 Brave.Brave*
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/config/default_excluded_apps.txt
 Google.Chrome*
 Microsoft.Edge*
 Microsoft.Office
@@ -11,8 +8,5 @@ Microsoft.Teams*
 Mozilla.Firefox*
 Opera.Opera*
 TeamViewer.TeamViewer*
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/config/default_excluded_apps.txt
-=======
 Romanitho.Winget-AutoUpdate
 KnifMelti.WAU-Settings-GUI
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/config/default_excluded_apps.txt

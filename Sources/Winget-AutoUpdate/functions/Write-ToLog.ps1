@@ -26,11 +26,7 @@ function Write-ToLog {
 
     #If header requested
     if ($IsHeader) {
-<<<<<<< HEAD:Sources/WAU/Winget-AutoUpdate/functions/Write-ToLog.ps1
-        $Log = "#" * 65 + "`n#`t$(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - $LogMsg`n" + "#" * 65
-=======
         $Log = "#" * 65 + "`n#    $(Get-Date -Format (Get-culture).DateTimeFormat.ShortDatePattern) - $LogMsg`n" + "#" * 65
->>>>>>> upstream/main:Sources/Winget-AutoUpdate/functions/Write-ToLog.ps1
     }
     else {
         $Log = "$(Get-Date -UFormat "%T") - $LogMsg"
