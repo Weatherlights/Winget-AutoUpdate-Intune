@@ -20,6 +20,7 @@ You can also configure your white- and blacklist from within the Microsoft Intun
 * Fully ADMX backed configuration using Microsoft Intune
 * White- or Blacklist apps you want to update
 * Easy deployment using a single MSI file
+* [Built-In Mods](https://github.com/Weatherlights/Winget-AutoUpdate-Intune/wiki/Modifications) that can be configured using Intune profiles (No coding/scripts needed)
 * Available as Microsoft Store App
 * All code is signed to make Winget-Autoupdate-aaS working even in restricted environments
 
