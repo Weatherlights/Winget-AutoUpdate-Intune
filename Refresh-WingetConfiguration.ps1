@@ -437,8 +437,8 @@ if ( ($configuration | ConvertTo-Json -Depth 1 -Compress) -ne $previousCommandLi
     Invoke-WAURefresh -configuration $configuration;
 
     if ( $configuration.ReinstallOnRefresh ) {
-        & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate" -Uninstall;
-        Write-LogFile "Removed WAU for Reinstall." -Severity 1
+       # & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate" -Uninstall;
+        Write-LogFile "Reinstall not supported anymore." -Severity 1
     }
 
     & "$scriptlocation\Winget-Autoupdate\config\WAU-MSI_Actions.ps1" -InstallPath "$($scriptlocation)\Winget-Autoupdate";
